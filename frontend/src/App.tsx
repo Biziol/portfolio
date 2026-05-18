@@ -1,0 +1,83 @@
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router";
+import Home from "./pages/Home";
+import TopBar from "./components/TopBar";
+import Button from "./components/ui/Button";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+function AppContent() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const path = location.pathname;
+
+  return (
+    <>
+      <TopBar>
+        <h2>Fabrizio Lombardi</h2>
+
+        <div className="flex flex-row gap-4">
+          <Button
+            variant={path === "/" ? "primary" : "transparent"}
+            onClick={() => navigate("/")}
+          >
+            Home
+          </Button>
+          <Button
+            variant={path === "/about" ? "primary" : "transparent"}
+            onClick={() => navigate("/about")}
+          >
+            About
+          </Button>
+          <Button
+            variant={path === "/progetti" ? "primary" : "transparent"}
+            onClick={() => navigate("/progetti")}
+          >
+            Progetti
+          </Button>
+          <Button
+            variant={path === "/esperienza" ? "primary" : "transparent"}
+            onClick={() => navigate("/esperienza")}
+          >
+            Esperienza
+          </Button>
+          <Button
+            variant={path === "/crud-demo" ? "primary" : "transparent"}
+            onClick={() => navigate("/crud-demo")}
+          >
+            CRUD Demo
+          </Button>
+          <Button
+            variant={path === "/recensioni" ? "primary" : "transparent"}
+            onClick={() => navigate("/recensioni")}
+          >
+            Recensioni
+          </Button>
+          <Button
+            variant={path === "/contatti" ? "primary" : "transparent"}
+            onClick={() => navigate("/contatti")}
+          >
+            Contatti
+          </Button>
+        </div>
+      </TopBar>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;

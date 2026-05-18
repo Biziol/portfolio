@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family: "inter", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 1rem;
+  overflow: hidden;
+
+  --background: #fbf9fa;
+  --foreground: #000000;
+  --muted: #ffffff;
+  --muted-foreground: #f3f3f5;
+  --border: #a1a1a180;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --primary-hover: #1a1a1a;
+  --danger: rgb(255, 0, 0);
+
+  color-scheme: light;
+  color: var(--foreground);
+  background-color: var(--background);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-danger: var(--danger);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #16181d;
+    --foreground: #ffffff;
+    --muted: #1b1d22;
+    --muted-foreground: #292e38;
+    --border: #a1a1a149;
+    --primary: #ffffff;
+    --primary-foreground: #000000;
+    --primary-hover: #ebebeb;
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  a {
+    font-weight: 500;
+    color: var(--primary);
+    text-decoration: inherit;
+    cursor: pointer;
+  }
+
+  a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+  }
+
+  body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.1;
+  }
+
+  h4 {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+
+  hr {
+    width: 100%;
+    border: 1px solid var(--border);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
