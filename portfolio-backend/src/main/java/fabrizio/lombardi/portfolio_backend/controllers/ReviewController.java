@@ -1,45 +1,48 @@
 package fabrizio.lombardi.portfolio_backend.controllers;
 
+import fabrizio.lombardi.portfolio_backend.mappers.ReviewMapper;
+import fabrizio.lombardi.portfolio_backend.models.Review;
+import fabrizio.lombardi.portfolio_backend.models.dtos.ReviewDto;
+import fabrizio.lombardi.portfolio_backend.services.ReviewService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import fabrizio.lombardi.portfolio_backend.models.Review;
-import fabrizio.lombardi.portfolio_backend.services.ReviewService;
 
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
     private final ReviewService service;
+    private final ReviewMapper mapper;
 
-    public ReviewController(ReviewService service) {
+    public ReviewController(ReviewService service, ReviewMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping
-    public List<Review> all() {
-        return service.findAll();
+    public List<ReviewDto> all() {
+        return service.findAll().stream().map(mapper::toDto).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Review> get(@PathVariable Long id) {
+    public ResponseEntity<ReviewDto> get(@PathVariable Long id) {
         return service.findById(id)
-                .map(ResponseEntity::ok)
+                .map(review -> ResponseEntity.ok(mapper.toDto(review)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Review> create(@RequestBody Review body) {
-        Review saved = service.save(body);
-        return ResponseEntity.status(201).body(saved);
+    public ResponseEntity<ReviewDto> create(@RequestBody ReviewDto body) {
+        Review saved = service.save(mapper.toEntity(body));
+        return ResponseEntity.status(201).body(mapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Review> update(@PathVariable Long id, @RequestBody Review body) {
+    public ResponseEntity<ReviewDto> update(@PathVariable Long id, @RequestBody ReviewDto body) {
         return service.findById(id).map(existing -> {
-            body.setId(existing.getId());
-            return ResponseEntity.ok(service.save(body));
+            Review entity = mapper.toEntity(body);
+            entity.setId(existing.getId());
+            return ResponseEntity.ok(mapper.toDto(service.save(entity)));
         }).orElse(ResponseEntity.notFound().build());
     }
 
