@@ -17,10 +17,10 @@ export default function Button({
   return (
     <button
       className={cn(
-        "py-1 px-1.5 w-max flex flex-row gap-1 items-center rounded-lg",
+        "py-2 px-3 w-max flex flex-row gap-1 items-center rounded-lg",
         variant == "primary" && "bg-primary text-primary-foreground",
-        variant == "secondary" && "bg-transparent border border-gray-200",
-        variant == "transparent" && "bg-transparent",
+        variant == "secondary" && "bg-transparent border border-border",
+        variant == "transparent" && "bg-transparent hover:bg-primary/10",
         classname,
       )}
       onClick={onClick}

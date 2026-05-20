@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home";
 import TopBar from "./components/TopBar";
 import Button from "./components/ui/Button";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function AppContent() {
   const path = location.pathname;
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <TopBar>
         <h2>Fabrizio Lombardi</h2>
 
@@ -75,8 +76,9 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
