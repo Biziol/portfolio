@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import TopBar from "./components/TopBar";
 import Button from "./components/ui/Button";
 import About from "./pages/About";
+import Experience from "./pages/Experience";
+import Project from "./pages/Project";
 
 function App() {
   return (
@@ -42,16 +44,16 @@ function AppContent() {
             About
           </Button>
           <Button
-            variant={path === "/progetti" ? "primary" : "transparent"}
-            onClick={() => navigate("/progetti")}
-          >
-            Progetti
-          </Button>
-          <Button
-            variant={path === "/esperienza" ? "primary" : "transparent"}
-            onClick={() => navigate("/esperienza")}
+            variant={path === "/experience" ? "primary" : "transparent"}
+            onClick={() => navigate("/experience")}
           >
             Esperienza
+          </Button>
+          <Button
+            variant={path === "/project" ? "primary" : "transparent"}
+            onClick={() => navigate("/project")}
+          >
+            Progetti
           </Button>
           <Button
             variant={path === "/crud-demo" ? "primary" : "transparent"}
@@ -77,6 +79,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/experience" element={<Experience />} />
+        <Route path="/project" element={<Project />} />
       </Routes>
     </div>
   );

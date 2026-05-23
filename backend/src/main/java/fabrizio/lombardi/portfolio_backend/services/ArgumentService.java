@@ -19,6 +19,10 @@ public class ArgumentService {
         return repository.findAll();
     }
 
+    public List<Argument> findAllByWorkAndTrainingId(Long workAndTrainingId) {
+        return repository.findAllByWorkAndTrainingId(workAndTrainingId);
+    }
+
     public Optional<Argument> findById(Long id) {
         return repository.findById(id);
     }

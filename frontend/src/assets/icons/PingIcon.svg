@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="30" height="30">
+  <defs>
+    <style>
+      /* Usa currentColor per fare in modo che ereditino il colore del testo di Tailwind */
+      .core {
+        fill: currentColor;
+      }
+      
+      .ripple {
+        transform-origin: center;
+        animation: rip 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        fill: currentColor;
+      }
+      
+      .ripple-1 {
+        opacity: 0.6;
+      }
+      
+      .ripple-2 {
+        opacity: 0.4;
+        animation-delay: 0.8s;
+      }
+      
+      @keyframes rip {
+        0% {
+          transform: scale(0.2);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+    </style>
+  </defs>
+
+  <circle class="ripple ripple-1" cx="50" cy="50" r="45" />
+  <circle class="ripple ripple-2" cx="50" cy="50" r="45" />
+  <circle class="core" cx="50" cy="50" r="10" />
+</svg>

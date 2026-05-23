@@ -1,5 +1,5 @@
 import Scaffold from "../components/Scaffold";
-import fotoCv from "../assets/FotoCv.jpg";
+import fotoCv from "../assets/FotoCv.png";
 import Linkedin from "../assets/icons/Linkedin.svg?react";
 import GitHub from "../assets/icons/Github.svg?react";
 import MouseAnimation from "../assets/icons/mouseanimation.svg?react";
