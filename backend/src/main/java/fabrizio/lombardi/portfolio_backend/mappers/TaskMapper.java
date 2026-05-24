@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskMapper {
     public TaskDto toDto(Task task) {
-        return new TaskDto(task.getId(), task.getTitle(), task.getDescription(), task.getState());
+        return new TaskDto(task.getId(), task.getTitle(), task.getDescription(), task.getState(),
+                task.getCreationDate());
     }
 
     public Task toEntity(TaskDto dto) {
@@ -16,6 +17,7 @@ public class TaskMapper {
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
         task.setState(dto.getState());
+        task.setCreationDate(dto.getCreationDate());
         return task;
     }
 }

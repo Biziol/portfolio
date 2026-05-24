@@ -55,7 +55,7 @@ export default function Experience() {
 
   return (
     <Scaffold>
-      <h2>Esperienza e Formazione</h2>
+      <h1>Esperienza e Formazione</h1>
 
       <section className="w-full h-max flex flex-col gap-2">
         <div className="flex gap-5 items-center">

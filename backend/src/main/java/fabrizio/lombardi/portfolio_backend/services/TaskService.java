@@ -1,6 +1,8 @@
 package fabrizio.lombardi.portfolio_backend.services;
 
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ public class TaskService {
     }
 
     public Task save(Task entity) {
+        entity.setCreationDate(LocalDate.now());
         return repository.save(entity);
     }
 

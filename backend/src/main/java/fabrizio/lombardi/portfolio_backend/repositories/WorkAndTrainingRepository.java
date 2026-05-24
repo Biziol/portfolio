@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import fabrizio.lombardi.portfolio_backend.models.WorkAndTraining;
 import java.util.List;
-import java.time.LocalDate;
 
 @Repository
 public interface WorkAndTrainingRepository extends JpaRepository<WorkAndTraining, Long> {

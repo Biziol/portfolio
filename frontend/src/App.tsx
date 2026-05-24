@@ -11,6 +11,7 @@ import Button from "./components/ui/Button";
 import About from "./pages/About";
 import Experience from "./pages/Experience";
 import Project from "./pages/Project";
+import CrudDemo from "./pages/CrudDemo";
 
 function App() {
   return (
@@ -81,6 +82,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
         <Route path="/experience" element={<Experience />} />
         <Route path="/project" element={<Project />} />
+        <Route path="/crud-demo" element={<CrudDemo />} />
       </Routes>
     </div>
   );

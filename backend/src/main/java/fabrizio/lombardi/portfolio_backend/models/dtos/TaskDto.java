@@ -1,5 +1,7 @@
 package fabrizio.lombardi.portfolio_backend.models.dtos;
 
+import java.time.LocalDate;
+
 import fabrizio.lombardi.portfolio_backend.models.enums.TaskState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,4 +17,5 @@ public class TaskDto {
     private String title;
     private String description;
     private TaskState state;
+    private LocalDate creationDate;
 }

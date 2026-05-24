@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 import fabrizio.lombardi.portfolio_backend.models.enums.TaskState;
 
 @Entity
@@ -32,4 +34,6 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private TaskState state;
+
+    private LocalDate creationDate;
 }

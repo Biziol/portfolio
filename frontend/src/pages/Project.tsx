@@ -33,7 +33,7 @@ export default function Project() {
   }, []);
   return (
     <Scaffold>
-      <h2>Progetti</h2>
+      <h1>Progetti</h1>
       <div className="w-full flex-row grid grid-cols-2 gap-5">
         {repos.map((repo) => (
           <Card key={repo.id} className="grow basis-0 justify-between">
