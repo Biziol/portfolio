@@ -6,6 +6,7 @@ interface ButtonProps {
   className?: string;
   variant?: "primary" | "secondary" | "transparent";
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
   href?: string;
   newTab?: boolean;
 }
@@ -15,6 +16,7 @@ export default function Button({
   className,
   variant = "primary",
   onClick,
+  type = "button",
   href,
   newTab = false,
 }: Readonly<ButtonProps>) {
@@ -40,7 +42,7 @@ export default function Button({
   }
 
   return (
-    <button className={buttonClasses} onClick={onClick}>
+    <button type={type} className={buttonClasses} onClick={onClick}>
       {children}
     </button>
   );

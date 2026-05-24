@@ -43,6 +43,7 @@ export function Select({
       )}
       <Button
         onClick={() => setIsOpen(!isOpen)}
+        type="button"
         variant="transparent"
         className="w-full bg-muted-foreground justify-between"
       >
@@ -83,6 +84,7 @@ export function SelectItem({
   return (
     <Button
       onClick={() => onClick?.(value)}
+      type="button"
       variant="transparent"
       className={cn(
         "w-full",

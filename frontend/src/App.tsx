@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Experience from "./pages/Experience";
 import Project from "./pages/Project";
 import CrudDemo from "./pages/CrudDemo";
+import Rewiew from "./pages/Rewiew";
 
 function App() {
   return (
@@ -63,8 +64,8 @@ function AppContent() {
             CRUD Demo
           </Button>
           <Button
-            variant={path === "/recensioni" ? "primary" : "transparent"}
-            onClick={() => navigate("/recensioni")}
+            variant={path === "/rewiew" ? "primary" : "transparent"}
+            onClick={() => navigate("/rewiew")}
           >
             Recensioni
           </Button>
@@ -83,6 +84,7 @@ function AppContent() {
         <Route path="/experience" element={<Experience />} />
         <Route path="/project" element={<Project />} />
         <Route path="/crud-demo" element={<CrudDemo />} />
+        <Route path="/rewiew" element={<Rewiew />} />
       </Routes>
     </div>
   );

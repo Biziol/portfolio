@@ -1,6 +1,8 @@
 package fabrizio.lombardi.portfolio_backend.services;
 
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +26,15 @@ public class ReviewService {
     }
 
     public Review save(Review entity) {
+        entity.setCreationDate(LocalDateTime.now());
         return repository.save(entity);
     }
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public Double getRating() {
+        return repository.getRating();
     }
 }

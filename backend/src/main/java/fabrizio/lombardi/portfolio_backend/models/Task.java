@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import fabrizio.lombardi.portfolio_backend.models.enums.TaskState;
 
@@ -35,5 +35,5 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskState state;
 
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 }

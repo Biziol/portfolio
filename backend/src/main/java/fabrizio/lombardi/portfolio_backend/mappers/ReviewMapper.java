@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewMapper {
     public ReviewDto toDto(Review review) {
-        return new ReviewDto(review.getId(), review.getAuthor(), review.getStars(), review.getComment());
+        return new ReviewDto(review.getId(), review.getAuthor(), review.getStars(), review.getComment(),
+                review.getCreationDate());
     }
 
     public Review toEntity(ReviewDto dto) {
@@ -16,6 +17,7 @@ public class ReviewMapper {
         review.setAuthor(dto.getAuthor());
         review.setStars(dto.getStars());
         review.setComment(dto.getComment());
+        review.setCreationDate(dto.getCreationDate());
         return review;
     }
 }

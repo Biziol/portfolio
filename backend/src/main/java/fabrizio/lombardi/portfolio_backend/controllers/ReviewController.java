@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
@@ -51,4 +52,10 @@ public class ReviewController {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping({ "/rating", "/raiting" })
+    public Double getRating() {
+        return service.getRating();
+    }
+
 }

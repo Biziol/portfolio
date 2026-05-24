@@ -20,6 +20,7 @@ import {
 } from "../interfaces/enums/TaskState";
 import Pill from "../components/ui/Pill";
 import { formatDateTime } from "../utils/formatDateTime";
+import Form from "../components/Form";
 
 export default function CrudDemo() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -76,7 +77,7 @@ export default function CrudDemo() {
 
       <section className="w-full flex flex-col gap-5 items-end">
         {insertForm ? (
-          <Card className="w-full">
+          <Form className="w-full" onSubmit={handleTaskCreation}>
             <div className="flex w-full justify-between">
               <h3>Crea nuovo task</h3>{" "}
               <Button onClick={() => setInsertForm(false)} variant="secondary">
@@ -113,11 +114,11 @@ export default function CrudDemo() {
               ))}
             </Select>
 
-            <Button onClick={() => handleTaskCreation()}>
+            <Button type="submit">
               <SaveIcon />
               Salva
             </Button>
-          </Card>
+          </Form>
         ) : (
           <Button onClick={() => setInsertForm(true)}>
             <PlusIcon />
@@ -129,7 +130,11 @@ export default function CrudDemo() {
       <section className="w-full flex flex-col gap-5">
         {tasks?.map((t) =>
           update === t.id ? (
-            <Card key={t.id} className="w-full">
+            <Form
+              key={t.id}
+              className="w-full"
+              onSubmit={() => handleTaskUpdate(t.id)}
+            >
               <h3>Modifica task</h3>{" "}
               <Input
                 required
@@ -157,7 +162,7 @@ export default function CrudDemo() {
                 ))}
               </Select>
               <div className="flex gap-5">
-                <Button onClick={() => handleTaskUpdate(t.id)}>
+                <Button type="submit">
                   <SaveIcon />
                   Salva
                 </Button>
@@ -166,7 +171,7 @@ export default function CrudDemo() {
                   Annulla
                 </Button>
               </div>
-            </Card>
+            </Form>
           ) : (
             <Card key={t.id} className="gap-2">
               <div className="w-full flex flex-row justify-between">
@@ -204,7 +209,7 @@ export default function CrudDemo() {
 
               <span className="text-md text-foreground/60">
                 Creato:{" "}
-                {formatDateTime(t.creationDate || "", "it-IT", true, false)} {}
+                {formatDateTime(t.creationDate || "", "it-IT", true, false)}
               </span>
             </Card>
           ),

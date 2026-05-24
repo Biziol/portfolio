@@ -1,5 +1,7 @@
 package fabrizio.lombardi.portfolio_backend.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +29,7 @@ public class Review {
 
     @Column(columnDefinition = "TEXT")
     private String comment;
+
+    private LocalDateTime creationDate;
 
 }
