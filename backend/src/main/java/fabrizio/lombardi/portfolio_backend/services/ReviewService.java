@@ -27,6 +27,9 @@ public class ReviewService {
 
     public Review save(Review entity) {
         entity.setCreationDate(LocalDateTime.now());
+        if (entity.getAuthor().equals("")) {
+            entity.setAuthor("Anonimo");
+        }
         return repository.save(entity);
     }
 

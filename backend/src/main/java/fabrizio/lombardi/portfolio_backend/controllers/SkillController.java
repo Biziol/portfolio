@@ -6,6 +6,7 @@ import fabrizio.lombardi.portfolio_backend.models.dtos.SkillDto;
 import fabrizio.lombardi.portfolio_backend.services.SkillService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,12 +33,14 @@ public class SkillController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SkillDto> create(@RequestBody SkillDto body) {
         Skill saved = service.save(mapper.toEntity(body));
         return ResponseEntity.status(201).body(mapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SkillDto> update(@PathVariable Long id, @RequestBody SkillDto body) {
         return service.findById(id).map(existing -> {
             Skill entity = mapper.toEntity(body);
@@ -47,6 +50,7 @@ public class SkillController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

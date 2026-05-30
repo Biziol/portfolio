@@ -1,8 +1,10 @@
 package fabrizio.lombardi.portfolio_backend.services;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +19,12 @@ public class TaskService {
         this.repository = repository;
     }
 
-    public List<Task> findAll() {
-        return repository.findAll();
+    public List<Task> findAll(String username) {
+        List<Task> tasks = repository.findAllByUserUsernameOrderByCreationDateDesc(username);
+        if (tasks == null) {
+            return Collections.emptyList();
+        }
+        return tasks;
     }
 
     public Optional<Task> findById(Long id) {

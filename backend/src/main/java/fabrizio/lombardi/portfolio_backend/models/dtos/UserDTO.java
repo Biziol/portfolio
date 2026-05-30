@@ -1,5 +1,6 @@
 package fabrizio.lombardi.portfolio_backend.models.dtos;
 
+import fabrizio.lombardi.portfolio_backend.models.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ContactInformationDto {
-    private long id;
-    private String fieldName;
-    private String value;
-    private String link;
+public class UserDTO {
+    private String username;
+    private Role role;
 }

@@ -10,7 +10,7 @@ import TextArea from "../components/ui/TextArea";
 import { createRewiew, getRating, getRewiews } from "../services/rewiewService";
 import { formatDateTime } from "../utils/formatDateTime";
 
-export default function Rewiew() {
+export default function Review() {
   const [rewiews, setRewiews] = useState<Rewiew[]>([]);
   const [newRewiew, setNewRewiew] = useState<Rewiew>(rewiewPayload);
   const [rating, setRating] = useState(0);
@@ -39,7 +39,7 @@ export default function Rewiew() {
   }, [update]);
 
   return (
-    <Scaffold className="px-100">
+    <Scaffold className="px-100" prevPath="/crud-demo" nextPath="/contact">
       <h1>Recensioni</h1>
 
       <Form className="w-full" onSubmit={handleSubmit}>
@@ -70,7 +70,7 @@ export default function Rewiew() {
         />
 
         <div className="flex flex-col gap-2">
-          <label className="flex gap-1">Valutazione</label>
+          <span className="flex gap-1">Valutazione</span>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <Button
@@ -122,7 +122,7 @@ export default function Rewiew() {
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
-								size={15}
+                size={15}
                 key={star}
                 className={
                   star <= rewiew.stars

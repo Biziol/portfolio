@@ -16,7 +16,7 @@ const APPLICATION_TYPES = new Set<keyof typeof ApplicationTypeColors>([
   "backend",
   "fullstack",
   "tool",
-  "library"
+  "library",
 ]);
 
 function isApplicationType(
@@ -32,7 +32,7 @@ export default function Project() {
     getPublicRepositories("Biziol").then((data) => setRepos(data));
   }, []);
   return (
-    <Scaffold>
+    <Scaffold prevPath="/experience" nextPath="/crud-demo">
       <h1>Progetti</h1>
       <div className="w-full flex-row grid grid-cols-2 gap-5">
         {repos.map((repo) => (

@@ -54,7 +54,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <Scaffold>
+    <Scaffold prevPath="/about" nextPath="/project">
       <h1>Esperienza e Formazione</h1>
 
       <section className="w-full h-max flex flex-col gap-2">

@@ -1,19 +1,33 @@
-import {
-  Code2Icon,
-  DatabaseIcon,
-  LayoutIcon,
-  ServerIcon,
-  SmartphoneIcon,
-  TerminalIcon,
-} from "lucide-react";
+import { Code2Icon, SmartphoneIcon } from "lucide-react";
 import Scaffold from "../components/Scaffold";
 import Card from "../components/ui/Card";
+import { useEffect, useState } from "react";
+import type { Skill } from "../interfaces/Skill";
+import { getAllSkills } from "../services/skillService";
+import {
+  SKILL_FIELD_ICONS,
+  SKILL_FIELDS,
+} from "../interfaces/enums/SkillField";
 
 export default function About() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+
+  async function fetchSkills() {
+    getAllSkills()
+      .then((data) => {
+        setSkills(data);
+      })
+      .catch();
+  }
+
+  useEffect(() => {
+    fetchSkills();
+  }, []);
+
   return (
-    <Scaffold className="justify-between">
+    <Scaffold className="justify-between" prevPath="/" nextPath="/experience">
       <h2>Chi sono?</h2>
-      <div className="flex flex-row gap-5">
+      <div className="flex flex-wrap flex-row gap-5">
         <Card className="basis-0 grow">
           <Code2Icon className="w-10 h-10 text-primary" />
           <h3>Il Mio Percorso</h3>
@@ -48,54 +62,25 @@ export default function About() {
       </div>
 
       <h2>Competenze Tecniche</h2>
-      <div className="flex flex-row gap-5 w-full grow">
-        <Card className="basis-0 grow">
-          <div className="flex gap-2 items-center">
-            <LayoutIcon className="w-6 h-6 text-primary" />
-            <h4>Forntend</h4>
-          </div>
-          <ul className="w-full pl-4 list-disc marker:text-primary">
-            <li>React</li>
-            <li>Flutter</li>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-          </ul>
-        </Card>
-        <Card className="basis-0 grow">
-          <div className="flex gap-2 items-center">
-            <ServerIcon className="w-6 h-6 text-primary" />
-            <h4>Backend</h4>
-          </div>
-          <ul className="w-full pl-4 list-disc marker:text-primary">
-            <li>Java</li>
-            <li>Spring Boot</li>
-            <li>REST API</li>
-          </ul>
-        </Card>
-        <Card className="basis-0 grow">
-          <div className="flex gap-2 items-center">
-            <DatabaseIcon className="w-6 h-6 text-primary" />
-            <h4>Database</h4>
-          </div>
-          <ul className="w-full pl-4 list-disc marker:text-primary">
-            <li>SQL</li>
-            <li>PostgreSQL</li>
-            <li>MySQL</li>
-          </ul>
-        </Card>
-        <Card className="basis-0 grow">
-          <div className="flex gap-2 items-center">
-            <TerminalIcon className="w-6 h-6 text-primary" />
-            <h4>Tools</h4>
-          </div>
-          <ul className="w-full pl-4 list-disc marker:text-primary">
-            <li>Git</li>
-            <li>Linux</li>
-            <li>Vite</li>
-            <li>Maven</li>
-          </ul>
-        </Card>
+      <div className="flex flex-wrap flex-row gap-5 w-full grow">
+        {SKILL_FIELDS.map((f) => {
+          const Icon = SKILL_FIELD_ICONS[f];
+          return (
+            <Card key={f} className="basis-0 grow">
+              <div className="flex gap-2 items-center">
+                <Icon className="w-6 h-6 text-primary" />
+                <h4>{f}</h4>
+              </div>
+              <ul className="w-full pl-4 list-disc marker:text-primary">
+                {skills
+                  ?.filter((s) => s.skillField == f)
+                  .map((s) => (
+                    <li key={s.id}>{s.name}</li>
+                  ))}
+              </ul>
+            </Card>
+          );
+        })}
       </div>
     </Scaffold>
   );

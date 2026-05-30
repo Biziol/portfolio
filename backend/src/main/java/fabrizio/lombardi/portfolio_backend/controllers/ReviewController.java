@@ -6,9 +6,9 @@ import fabrizio.lombardi.portfolio_backend.models.dtos.ReviewDto;
 import fabrizio.lombardi.portfolio_backend.services.ReviewService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
@@ -39,6 +39,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewDto> update(@PathVariable Long id, @RequestBody ReviewDto body) {
         return service.findById(id).map(existing -> {
             Review entity = mapper.toEntity(body);
@@ -48,6 +49,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

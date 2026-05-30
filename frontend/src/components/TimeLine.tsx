@@ -56,7 +56,7 @@ export function TimeLineItem({
       {/* Punto di ancoraggio del singolo elemento timeline. */}
       <span
         className={cn(
-          `absolute left-[-0.1rem] mt-0.5 h-4 w-4 rounded-full bg-zinc-300`,
+          `absolute left-[-0.1rem] mt-6 h-4 w-4 rounded-full bg-zinc-300`,
           dotStyle,
         )}
       ></span>

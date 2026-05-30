@@ -1,4 +1,11 @@
-import { Edit3Icon, PlusIcon, SaveIcon, Trash2Icon, XIcon } from "lucide-react";
+import {
+  Edit3Icon,
+  LogOutIcon,
+  PlusIcon,
+  SaveIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import Scaffold from "../components/Scaffold";
 import Button from "../components/ui/Button";
 import { useEffect, useState } from "react";
@@ -21,6 +28,7 @@ import {
 import Pill from "../components/ui/Pill";
 import { formatDateTime } from "../utils/formatDateTime";
 import Form from "../components/Form";
+import { logout } from "../services/AuthService";
 
 export default function CrudDemo() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -61,14 +69,28 @@ export default function CrudDemo() {
     setUpdate(task.id);
   };
 
+  const handleLogout = () => {
+    logout().then(() => (globalThis.location.href = "/login"));
+  };
+
   useEffect(() => {
     fetchAllTasks();
   }, [update]);
 
   return (
-    <Scaffold>
+    <Scaffold prevPath="/project" nextPath="/rewiew">
       <section className="flex flex-col items-center gap-2">
-        <h1>CRUD Demo</h1>
+        <div className="flex flex-row gap-2">
+          <h1>CRUD Demo</h1>
+          <Button
+            variant="transparent"
+            className="text-danger"
+            onClick={handleLogout}
+          >
+            <LogOutIcon />
+          </Button>
+        </div>
+
         <p className="text-foreground/60">
           Demo interattiva di operazioni CRUD (Create, Read, Update, Delete) per
           la gestione di task.

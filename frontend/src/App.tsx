@@ -12,7 +12,13 @@ import About from "./pages/About";
 import Experience from "./pages/Experience";
 import Project from "./pages/Project";
 import CrudDemo from "./pages/CrudDemo";
-import Rewiew from "./pages/Rewiew";
+import Rewiew from "./pages/Review";
+import Contact from "./pages/Contact";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { UseAuth } from "./context/AuthContext";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 
 function App() {
   return (
@@ -26,6 +32,7 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
+  const { user, loading, isAuthenticated } = UseAuth();
 
   return (
     <div className="flex flex-col h-full">
@@ -58,7 +65,11 @@ function AppContent() {
             Progetti
           </Button>
           <Button
-            variant={path === "/crud-demo" ? "primary" : "transparent"}
+            variant={
+              path === "/crud-demo" || path === "/login" || path === "/register"
+                ? "primary"
+                : "transparent"
+            }
             onClick={() => navigate("/crud-demo")}
           >
             CRUD Demo
@@ -70,8 +81,8 @@ function AppContent() {
             Recensioni
           </Button>
           <Button
-            variant={path === "/contatti" ? "primary" : "transparent"}
-            onClick={() => navigate("/contatti")}
+            variant={path === "/contact" ? "primary" : "transparent"}
+            onClick={() => navigate("/contact")}
           >
             Contatti
           </Button>
@@ -83,8 +94,28 @@ function AppContent() {
         <Route path="/about" element={<About />} />
         <Route path="/experience" element={<Experience />} />
         <Route path="/project" element={<Project />} />
-        <Route path="/crud-demo" element={<CrudDemo />} />
+        <Route
+          element={
+            <ProtectedRoute
+              isLoading={loading}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        >
+          <Route path="/crud-demo" element={<CrudDemo />} />
+          <Route
+            element={
+              <RoleProtectedRoute userRole={user?.role} requiredRole="ADMIN" />
+            }
+          >
+            <Route path="/admin-page" element />
+          </Route>
+        </Route>
         <Route path="/rewiew" element={<Rewiew />} />
+        <Route path="/contact" element={<Contact />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
       </Routes>
     </div>
   );

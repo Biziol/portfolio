@@ -5,6 +5,7 @@ import fabrizio.lombardi.portfolio_backend.models.dtos.ArgumentDto;
 import fabrizio.lombardi.portfolio_backend.services.ArgumentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,11 +32,13 @@ public class ArgumentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ArgumentDto> create(@RequestBody ArgumentDto body) {
         return ResponseEntity.status(201).body(mapper.toDto(service.save(mapper.toEntity(body))));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ArgumentDto> update(@PathVariable Long id, @RequestBody ArgumentDto body) {
         return service.findById(id).map(existing -> {
             var entity = mapper.toEntity(body);
@@ -45,6 +48,7 @@ public class ArgumentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

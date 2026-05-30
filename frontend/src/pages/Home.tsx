@@ -7,7 +7,7 @@ import { MailIcon } from "lucide-react";
 
 export default function Home() {
   return (
-    <Scaffold className="justify-center gap-5">
+    <Scaffold className="justify-center gap-5" nextPath="/about">
       <img
         src={fotoCv}
         alt="foto cv"
