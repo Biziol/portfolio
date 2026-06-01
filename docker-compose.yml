@@ -25,6 +25,10 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: changeme_root_password
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_EMAIL_HOST: smtp.gmail.com
+      SPRING_EMAIL_PORT: 587
+      SPRING_EMAIL_USERNAME: tuoindirizzo@example.com
+      SPRING_EMAIL_PASSWORD: PASSWORD_APP
     ports:
       - "8081:8080"
     networks:

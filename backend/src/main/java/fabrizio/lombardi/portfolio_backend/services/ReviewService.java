@@ -12,9 +12,11 @@ import fabrizio.lombardi.portfolio_backend.repositories.ReviewRepository;
 @Service
 public class ReviewService {
     private final ReviewRepository repository;
+    private final EmailService emailService;
 
-    public ReviewService(ReviewRepository repository) {
+    public ReviewService(ReviewRepository repository, EmailService emailService) {
         this.repository = repository;
+        this.emailService = emailService;
     }
 
     public List<Review> findAll() {
@@ -30,7 +32,9 @@ public class ReviewService {
         if (entity.getAuthor().equals("")) {
             entity.setAuthor("Anonimo");
         }
-        return repository.save(entity);
+        Review saved = repository.save(entity);
+        emailService.sendNewReviewNotification(saved);
+        return saved;
     }
 
     public void deleteById(Long id) {
