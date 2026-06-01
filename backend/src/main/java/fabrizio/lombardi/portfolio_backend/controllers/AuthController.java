@@ -23,6 +23,8 @@ import fabrizio.lombardi.portfolio_backend.models.dtos.UserDTO;
 import fabrizio.lombardi.portfolio_backend.models.enums.Role;
 import fabrizio.lombardi.portfolio_backend.repositories.UserRepo;
 import fabrizio.lombardi.portfolio_backend.services.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
@@ -45,6 +47,7 @@ public class AuthController {
         this.userRepo = userRepo;
     }
 
+    @Operation(summary = "Restituisce l'utente autenticato")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser() {
         try {
@@ -55,6 +58,7 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Endpoint di login")
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(
             @RequestParam String username,
@@ -73,6 +77,7 @@ public class AuthController {
         return ResponseEntity.ok(toDto(user));
     }
 
+    @Operation(summary = "Endpoint di Registrazione")
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(
             @RequestParam String username,
@@ -104,6 +109,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toDto(user));
     }
 
+    @Operation(summary = "Endpoint di logout")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -4,6 +4,8 @@ import fabrizio.lombardi.portfolio_backend.mappers.WorkAndTrainingMapper;
 import fabrizio.lombardi.portfolio_backend.models.WorkAndTraining;
 import fabrizio.lombardi.portfolio_backend.models.dtos.WorkAndTrainingDto;
 import fabrizio.lombardi.portfolio_backend.services.WorkAndTrainingService;
+import io.swagger.v3.oas.annotations.Operation;
+
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,11 +22,13 @@ public class WorkAndTrainingController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "Ritorna una lista di esperienze")
     @GetMapping
     public List<WorkAndTrainingDto> all() {
         return service.findAll().stream().map(mapper::toDto).toList();
     }
 
+    @Operation(summary = "Ritorna una singola esperienza")
     @GetMapping("/{id}")
     public ResponseEntity<WorkAndTrainingDto> get(@PathVariable Long id) {
         return service.findById(id)
@@ -32,6 +36,7 @@ public class WorkAndTrainingController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Crea una esperienza (admin-only)")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<WorkAndTrainingDto> create(@RequestBody WorkAndTrainingDto body) {
@@ -39,6 +44,7 @@ public class WorkAndTrainingController {
         return ResponseEntity.status(201).body(mapper.toDto(saved));
     }
 
+    @Operation(summary = "Aggiorna una esperienza (admin-only)")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<WorkAndTrainingDto> update(@PathVariable Long id, @RequestBody WorkAndTrainingDto body) {
@@ -49,6 +55,7 @@ public class WorkAndTrainingController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Cancella una esperienza (admin-only)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme_root_password
+      MYSQL_DATABASE: portfolio_db
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - portfolio_net
+
+  backend:
+    image: ghcr.io/biziol/portfolio-backend:${IMAGE_TAG:-latest}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/portfolio_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: changeme_root_password
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8081:8080"
+    networks:
+      - portfolio_net
+
+  frontend:
+    image: ghcr.io/biziol/portfolio-frontend:${IMAGE_TAG:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    networks:
+      - portfolio_net
+
+volumes:
+  db_data:
+
+networks:
+  portfolio_net:
+    driver: bridge

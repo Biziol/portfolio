@@ -5,6 +5,8 @@ import fabrizio.lombardi.portfolio_backend.models.Task;
 import fabrizio.lombardi.portfolio_backend.models.dtos.TaskDto;
 import fabrizio.lombardi.portfolio_backend.services.AuthenticationService;
 import fabrizio.lombardi.portfolio_backend.services.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,13 @@ public class TaskController {
         this.authService = authService;
     }
 
+    @Operation(summary = "Restituisce tutte le task (CRUD-user-only)")
     @GetMapping
     public List<TaskDto> all() {
         return service.findAll(authService.getAuthUser().getUsername()).stream().map(mapper::toDto).toList();
     }
 
+    @Operation(summary = "Restituisce una specifica task (CRUD-user-only)")
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> get(@PathVariable Long id) {
         return service.findById(id)
@@ -36,6 +40,7 @@ public class TaskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Crea una task (CRUD-user-only)")
     @PostMapping
     public ResponseEntity<TaskDto> create(@RequestBody TaskDto body) {
         var authUser = authService.getAuthUser();
@@ -48,6 +53,7 @@ public class TaskController {
         return ResponseEntity.status(201).body(mapper.toDto(saved));
     }
 
+    @Operation(summary = "Aggiorna una task (CRUD-user-only)")
     @PutMapping("/{id}")
     public ResponseEntity<TaskDto> update(@PathVariable Long id, @RequestBody TaskDto body) {
         var maybe = service.findById(id);
@@ -66,6 +72,7 @@ public class TaskController {
         return ResponseEntity.ok(mapper.toDto(service.save(entity)));
     }
 
+    @Operation(summary = "Cancella una task (CRUD-user-only)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         Task taskToDelete = service.findById(id).orElse(null);

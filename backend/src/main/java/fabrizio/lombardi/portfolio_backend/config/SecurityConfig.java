@@ -60,7 +60,7 @@ public class SecurityConfig {
 
     @Bean
     public org.springframework.security.authentication.AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+            AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }
 
