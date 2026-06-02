@@ -8,7 +8,7 @@ export async function login(username: string, password: string) {
   body.set("password", password);
 
   return await apiClient
-    .post("/api/auth/login", body.toString(), {
+    .post("/auth/login", body.toString(), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -32,7 +32,7 @@ export async function register(
   body.set("role", role);
 
   return await apiClient
-    .post("/api/auth/register", body.toString(), {
+    .post("/auth/register", body.toString(), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -46,14 +46,14 @@ export async function register(
 }
 
 export async function checkAuth() {
-  return await apiClient.get("/api/auth/me", {
+  return await apiClient.get("/auth/me", {
     withCredentials: true,
   });
 }
 
 export async function logout() {
   try {
-    const response = await apiClient.post("/api/auth/logout", null, {
+    const response = await apiClient.post("/auth/logout", null, {
       withCredentials: true,
     });
     return response.data;

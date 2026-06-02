@@ -3,35 +3,35 @@ import { apiClient } from "./apiClient";
 
 export async function getAllTasks() {
   return apiClient
-    .get(`/api/tasks`)
+    .get(`/tasks`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function getTaskById(taskId: number) {
   return apiClient
-    .get(`/api/tasks/${taskId}`)
+    .get(`/tasks/${taskId}`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function createTask(task: Task) {
   return apiClient
-    .post(`/api/tasks`, task)
+    .post(`/tasks`, task)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function updateTask(taskId: number, task: Task) {
   return apiClient
-    .put(`/api/tasks/${taskId}`, task)
+    .put(`/tasks/${taskId}`, task)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function deleteTask(taskId: number) {
   return apiClient
-    .delete(`/api/tasks/${taskId}`)
+    .delete(`/tasks/${taskId}`)
     .then((res) => res.data)
     .catch(() => {});
 }

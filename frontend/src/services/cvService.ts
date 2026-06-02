@@ -2,7 +2,7 @@ import { apiClient } from "./apiClient";
 
 export function getCv() {
   return apiClient
-    .get("/api/curriculum-vitae")
+    .get("/curriculum-vitae")
     .then((res) => res.data)
     .catch();
 }

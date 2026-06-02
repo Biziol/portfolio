@@ -3,42 +3,42 @@ import { apiClient } from "./apiClient";
 
 export async function getRewiews() {
   return apiClient
-    .get<Rewiew[]>("/api/reviews")
+    .get<Rewiew[]>("/reviews")
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function getRewiewById(rewiewId: number) {
   return apiClient
-    .get<Rewiew>(`/api/reviews/${rewiewId}`)
+    .get<Rewiew>(`/reviews/${rewiewId}`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function createRewiew(rewiew: Rewiew) {
   return apiClient
-    .post<Rewiew>("/api/reviews", rewiew)
+    .post<Rewiew>("/reviews", rewiew)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function updateRewiew(rewiewId: number, rewiew: Rewiew) {
   return apiClient
-    .put<Rewiew>(`/api/reviews/${rewiewId}`, rewiew)
+    .put<Rewiew>(`/reviews/${rewiewId}`, rewiew)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function deleteRewiew(rewiewId: number) {
   return apiClient
-    .delete(`/api/reviews/${rewiewId}`)
+    .delete(`/reviews/${rewiewId}`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function getRating() {
   return apiClient
-    .get<number>("/api/reviews/rating")
+    .get<number>("/reviews/rating")
     .then((res) => res.data)
     .catch(() => {});
 }

@@ -3,35 +3,35 @@ import { apiClient } from "./apiClient";
 
 export async function getAllSkills() {
   return apiClient
-    .get(`/api/skills`)
+    .get(`/skills`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function getSkillById(skillId: number) {
   return apiClient
-    .get(`/api/skills/${skillId}`)
+    .get(`/skills/${skillId}`)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function createSkill(skill: Skill) {
   return apiClient
-    .post(`/api/skills`, skill)
+    .post(`/skills`, skill)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function updateSkill(skillId: number, skill: Skill) {
   return apiClient
-    .put(`/api/skills/${skillId}`, skill)
+    .put(`/skills/${skillId}`, skill)
     .then((res) => res.data)
     .catch(() => {});
 }
 
 export async function deleteSkill(skillId: number) {
   return apiClient
-    .delete(`/api/skills/${skillId}`)
+    .delete(`/skills/${skillId}`)
     .then((res) => res.data)
     .catch(() => {});
 }

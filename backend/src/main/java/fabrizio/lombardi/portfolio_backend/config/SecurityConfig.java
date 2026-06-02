@@ -24,7 +24,7 @@ import fabrizio.lombardi.portfolio_backend.repositories.UserRepo;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${app.cors.allowed-origin:http://localhost:5173}")
+    @Value("${app.cors.allowed-origin}")
     private String allowedOrigin;
 
     @Bean
