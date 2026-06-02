@@ -45,13 +45,51 @@ services:
     restart: unless-stopped
     ports:
       - "3002:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
     depends_on:
       - frontend
       - backend
     networks:
       - portfolio_net
+
+configs:
+  nginx_config:
+    content: |
+      events { worker_connections 1024; }
+      http {
+          include       /etc/nginx/mime.types;
+          default_type  application/octet-stream;
+          server {
+              listen 80;
+              server_name localhost;
+              location /api {
+                  proxy_pass http://backend:8080;
+                  proxy_set_header Host $$host;
+                  proxy_set_header X-Real-IP $$remote_addr;
+                  proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $$scheme;
+              }
+              location /swagger-ui/ {
+                  proxy_pass http://backend:8080;
+                  proxy_set_header Host $$host;
+                  proxy_set_header X-Real-IP $$remote_addr;
+              }
+              location /v3/api-docs {
+                  proxy_pass http://backend:8080;
+                  proxy_set_header Host $$host;
+                  proxy_set_header X-Real-IP $$remote_addr;
+              } 
+              location / {
+                  proxy_pass http://frontend:80; 
+                  proxy_set_header Host $$host;
+                  proxy_set_header X-Real-IP $$remote_addr;
+                  proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $$scheme;
+              }
+          }
+      }
 
 volumes:
   db_data:
