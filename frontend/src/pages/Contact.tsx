@@ -64,7 +64,7 @@ export default function Contact() {
 
           <hr />
 
-          <Button className="w-full" href="http://localhost:8080/api/cv" newTab>
+          <Button className="w-full" href="/cv" newTab>
             <DownloadIcon />
             Scarica CV (PDF)
           </Button>
