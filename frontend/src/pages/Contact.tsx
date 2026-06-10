@@ -13,7 +13,7 @@ import Button from "../components/ui/Button";
 
 export default function Contact() {
   return (
-    <Scaffold className="px-80" prevPath="/rewiew">
+    <Scaffold id="/contact" className="2xl:px-100 lg:px-50 md:px-10 sm:px-5">
       <div className="flex flex-col gap-2 items-center">
         <h1>Contatti</h1>
         <span className="text-foreground/60">
@@ -21,7 +21,7 @@ export default function Contact() {
         </span>
       </div>
 
-      <section className="flex flex-row gap-5 w-full">
+      <section className="flex flex-row gap-5 w-full flex-wrap-reverse">
         <Card className="grow basis-0 justify-between">
           <h2>Informazioni di Contatto</h2>
 

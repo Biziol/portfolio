@@ -1,25 +1,27 @@
 import { ExternalLinkIcon, LogInIcon, TriangleAlert } from "lucide-react";
 import Form from "../components/Form";
-import Scaffold from "../components/Scaffold";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useState } from "react";
 import { login } from "../services/AuthService";
+import { UseAuth } from "../context/AuthContext";
 
-export default function Login() {
+export default function Login({
+  onRedirect,
+}: Readonly<{ onRedirect: () => void }>) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { refreshUser } = UseAuth();
 
   async function HandleLogin() {
     login(username, password)
       .then(() => {
-        globalThis.location.href = "/crud-demo";
+        refreshUser();
       })
       .catch();
   }
 
   return (
-    <Scaffold className="justify-center" prevPath="/project" nextPath="/rewiew">
       <Form onSubmit={HandleLogin} className="max-w-130">
         <h2>Login</h2>
         <div className="border border-amber-500 rounded-xl bg-amber-500/10 text-amber-500 p-2 flex flex-col gap-2">
@@ -54,7 +56,7 @@ export default function Login() {
           </Button>
           <Button
             variant="transparent"
-            href="/register"
+            onClick={onRedirect}
             className="hover:bg-transparent"
           >
             Registrati
@@ -62,6 +64,5 @@ export default function Login() {
           </Button>
         </div>
       </Form>
-    </Scaffold>
   );
 }

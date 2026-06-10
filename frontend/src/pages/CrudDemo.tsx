@@ -29,12 +29,17 @@ import Pill from "../components/ui/Pill";
 import { formatDateTime } from "../utils/formatDateTime";
 import Form from "../components/Form";
 import { logout } from "../services/AuthService";
+import { UseAuth } from "../context/AuthContext";
+import Login from "./Login";
+import Registration from "./Registration";
 
 export default function CrudDemo() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState<Task>(TaskPayload);
   const [insertForm, setInsertForm] = useState(false);
   const [update, setUpdate] = useState(0);
+  const [isRegistration, setIsRegistration] = useState(false);
+  const { isAuthenticated, loading, clearUser } = UseAuth();
 
   const fetchAllTasks = () => {
     getAllTasks()
@@ -70,15 +75,41 @@ export default function CrudDemo() {
   };
 
   const handleLogout = () => {
-    logout().then(() => (globalThis.location.href = "/login"));
+    logout()
+      .then(() => {
+        clearUser();
+      })
+      .catch();
   };
 
   useEffect(() => {
-    fetchAllTasks();
-  }, [update]);
+    if (isAuthenticated) {
+      fetchAllTasks();
+    }
+  }, [update, isAuthenticated]);
+
+  if (loading) {
+    return (
+      <Scaffold id="/crud-demo" className="justify-center items-center">
+        <p className="text-foreground/60">Verifica sessione in corso...</p>
+      </Scaffold>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Scaffold id="/crud-demo" className="justify-center">
+        {isRegistration ? (
+          <Registration onRedirect={() => setIsRegistration(false)} />
+        ) : (
+          <Login onRedirect={() => setIsRegistration(true)} />
+        )}
+      </Scaffold>
+    );
+  }
 
   return (
-    <Scaffold prevPath="/project" nextPath="/rewiew">
+    <Scaffold id="/crud-demo">
       <section className="flex flex-col items-center gap-2">
         <div className="flex flex-row gap-2">
           <h1>CRUD Demo</h1>

@@ -25,13 +25,13 @@ export default function About() {
   }, []);
 
   return (
-    <Scaffold className="justify-between" prevPath="/" nextPath="/experience">
+    <Scaffold id="/about" className="justify-between">
       <h2>Chi sono?</h2>
       <div className="flex flex-wrap flex-row gap-5">
-        <Card className="basis-0 grow">
+        <Card className="basis-0 grow min-w-50">
           <Code2Icon className="w-10 h-10 text-primary" />
           <h3>Il Mio Percorso</h3>
-          <p className="text-foreground/50">
+          <p className="text-foreground/50 text-wrap">
             Nato il 17 febbraio 2005 a Roma, la mia passione per la tecnologia
             mi ha portato a specializzarmi nello sviluppo Fullstack.
             <br /> <br />
@@ -44,10 +44,10 @@ export default function About() {
           </p>
         </Card>
 
-        <Card className="basis-0 grow">
+        <Card className="basis-0 grow min-w-50">
           <SmartphoneIcon className="w-10 h-10 text-primary" />
           <h3>Filosofia di Lavoro</h3>
-          <p className="text-foreground/50">
+          <p className="text-foreground/50 text-wrap">
             Credo nell'iniziativa personale come motore di crescita. Ogni
             progetto è un'opportunità per sperimentare nuove tecnologie e
             migliorare le mie competenze.

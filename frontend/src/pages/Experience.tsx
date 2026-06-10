@@ -30,8 +30,8 @@ export default function Experience() {
       const start = new Date();
       const end = new Date(endDate);
 
-      const timeDiff = end.getTime() - start.getTime(); // Time difference in milliseconds
-      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert ms to days
+      const timeDiff = end.getTime() - start.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
       console.log(
         "endDate: " +
@@ -54,7 +54,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <Scaffold prevPath="/about" nextPath="/project">
+    <Scaffold id="/experience">
       <h1>Esperienza e Formazione</h1>
 
       <section className="w-full h-max flex flex-col gap-2">
@@ -71,8 +71,8 @@ export default function Experience() {
                 .filter((e) => e.type == "WORK")
                 .map((work) => (
                   <TimeLineItem key={work.id} dotStyle="bg-primary">
-                    <Card className="gap-1">
-                      <div className="w-full flex flex-row items-center justify-between">
+                    <Card className="gap-1 mr-5">
+                      <div className="w-full flex flex-wrap flex-row items-center justify-between">
                         <h3>{work.title}</h3>
                         <p className="flex text-xs text-foreground/60 gap-2 items-center">
                           <CalendarIcon size={15} />
@@ -145,8 +145,8 @@ export default function Experience() {
                 .filter((e) => e.type == "TRAINING")
                 .map((training) => (
                   <TimeLineItem key={training.id} dotStyle="bg-primary">
-                    <Card className="gap-1">
-                      <div className="w-full flex flex-row items-center justify-between">
+                    <Card className="gap-1 mr-5">
+                      <div className="w-full flex flex-wrap flex-row items-center justify-between">
                         <h3>{training.title}</h3>
                         <p className="flex text-xs text-foreground/60 gap-2 items-center">
                           <CalendarIcon size={15} />
@@ -175,7 +175,7 @@ export default function Experience() {
                       </div>
 
                       <div className="text-foreground/60">
-                        <p className="flex gap-2 items-center">
+                        <p className="flex gap-2 items-center text-nowrap">
                           {training.instituteOrCompany} |
                           <a
                             className="text-xs flex"

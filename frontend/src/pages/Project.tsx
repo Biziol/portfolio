@@ -32,43 +32,51 @@ export default function Project() {
     getPublicRepositories("Biziol").then((data) => setRepos(data));
   }, []);
   return (
-    <Scaffold prevPath="/experience" nextPath="/crud-demo">
+    <Scaffold id="/project">
       <h1>Progetti</h1>
-      <div className="w-full flex-row grid grid-cols-2 gap-5">
+      <div className="w-full flex flex-row flex-wrap gap-5">
         {repos.map((repo) => (
-          <Card key={repo.id} className="grow basis-0 justify-between">
-            <h2>{repo.title}</h2>
-            <div className="flex flex-row gap-2">
-              {repo.topics.filter(isApplicationType).map((type) => (
-                <Pill
-                  key={type}
-                  className="py-1 rounded-full text-sm border"
-                  style={{
-                    color: ApplicationTypeColors[type],
-                    borderColor: ApplicationTypeColors[type],
-                    backgroundColor: `${ApplicationTypeColors[type]}1A`,
-                  }}
-                >
-                  {type}
-                </Pill>
-              ))}
-            </div>
-            <span className="text-foreground/60">{repo.description}</span>
-
-            <div className="flex flex-row gap-2">
-              {repo.topics
-                .filter((t) => !isApplicationType(t))
-                .map((language) => (
-                  <Pill key={language} className="text-sm">
-                    {language}
+          <Card
+            key={repo.id}
+            className="flex-1 grow basis-0 sm:min-w-1/3 min-w-1/2"
+          >
+            <div className="flex flex-col gap-3">
+              <h2>{repo.title}</h2>
+              <div className="flex flex-row gap-2">
+                {repo.topics.filter(isApplicationType).map((type) => (
+                  <Pill
+                    key={type}
+                    className="py-1 rounded-full text-sm border"
+                    style={{
+                      color: ApplicationTypeColors[type],
+                      borderColor: ApplicationTypeColors[type],
+                      backgroundColor: `${ApplicationTypeColors[type]}1A`,
+                    }}
+                  >
+                    {type}
                   </Pill>
                 ))}
+              </div>
             </div>
 
-            <Button href={repo.html_url} newTab>
-              <GitHub />
-              GitHub
-            </Button>
+            <span className="text-foreground/60 h-full">{repo.description}</span>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-row flex-wrap gap-2">
+                {repo.topics
+                  .filter((t) => !isApplicationType(t))
+                  .map((language) => (
+                    <Pill key={language} className="text-sm">
+                      {language}
+                    </Pill>
+                  ))}
+              </div>
+
+              <Button href={repo.html_url} newTab>
+                <GitHub />
+                GitHub
+              </Button>
+            </div>
           </Card>
         ))}
       </div>

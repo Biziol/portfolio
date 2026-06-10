@@ -7,7 +7,7 @@ import { MailIcon } from "lucide-react";
 
 export default function Home() {
   return (
-    <Scaffold className="justify-center gap-5" nextPath="/about">
+    <Scaffold id="/" className="justify-center gap-5">
       <img
         src={fotoCv}
         alt="foto cv"
@@ -16,12 +16,12 @@ export default function Home() {
       <h2>
         Ciao, sono <span className="text-primary">Fabrizio Lombardi</span>
       </h2>
-      <b className="text-l text-foreground/50">
+      <b className="text-center text-foreground/50">
         Fullstack Developer | React • Spring Boot • Flutter
       </b>
-      <p className="text-foreground/50 text-center">
+      <p className="text-foreground/50 text-center text-wrap max-w-150">
         Appassionato di tecnologia con focus sullo sviluppo Fullstack. Creo
-        soluzioni <br /> moderne e performanti attraverso il learning by doing.
+        soluzioni moderne e performanti attraverso il learning by doing.
       </p>
 
       <div className="flex flex-row gap-3">
@@ -54,7 +54,7 @@ export default function Home() {
         </a>
       </div>
 
-      <MouseAnimation className="w-10 h-10 fixed bottom-5 text-primary" />
+      <MouseAnimation className="w-10 h-10 absolute bottom-5 text-primary" />
     </Scaffold>
   );
 }

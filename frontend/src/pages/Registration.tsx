@@ -1,14 +1,13 @@
 import { ExternalLinkIcon, TriangleAlert, UserPlusIcon } from "lucide-react";
 import Form from "../components/Form";
-import Scaffold from "../components/Scaffold";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useState } from "react";
 import { register } from "../services/AuthService";
-import { useNavigate } from "react-router";
 
-export default function Registration() {
-  const navigate = useNavigate();
+export default function Registration({
+  onRedirect,
+}: Readonly<{ onRedirect: () => void }>) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -16,13 +15,12 @@ export default function Registration() {
   async function HandleRegistration() {
     if (password == passwordCheck) {
       register(username, password)
-        .then(() => navigate("/login"))
+        .then(() => onRedirect())
         .catch((e) => alert(e.message));
     } else alert("le password non sono identiche");
   }
 
   return (
-    <Scaffold className="justify-center">
       <Form onSubmit={HandleRegistration} className="max-w-130">
         <h2>Registrati</h2>
         <div className="border border-amber-500 rounded-xl bg-amber-500/10 text-amber-500 p-2 flex flex-col gap-2">
@@ -65,7 +63,7 @@ export default function Registration() {
           </Button>
           <Button
             variant="transparent"
-            href="/login"
+            onClick={onRedirect}
             className="hover:bg-transparent"
           >
             login
@@ -73,6 +71,5 @@ export default function Registration() {
           </Button>
         </div>
       </Form>
-    </Scaffold>
   );
 }

@@ -39,7 +39,7 @@ export default function Review() {
   }, [update]);
 
   return (
-    <Scaffold className="px-100" prevPath="/crud-demo" nextPath="/contact">
+    <Scaffold id="/rewiew" className="2xl:px-100 lg:px-50 md:px-10 sm:px-5">
       <h1>Recensioni</h1>
 
       <Form className="w-full" onSubmit={handleSubmit}>
