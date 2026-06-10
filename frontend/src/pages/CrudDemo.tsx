@@ -30,8 +30,10 @@ import { formatDateTime } from "../utils/formatDateTime";
 import Form from "../components/Form";
 import { logout } from "../services/AuthService";
 import { UseAuth } from "../context/AuthContext";
-import Login from "./Login";
-import Registration from "./Registration";
+import Login from "../components/Login";
+import Registration from "../components/Registration";
+import type { AlertType } from "../components/ui/Alert";
+import Alert from "../components/ui/Alert";
 
 export default function CrudDemo() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -40,33 +42,59 @@ export default function CrudDemo() {
   const [update, setUpdate] = useState(0);
   const [isRegistration, setIsRegistration] = useState(false);
   const { isAuthenticated, loading, clearUser } = UseAuth();
+  const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
+  const handleCloseAlert = () => setAlertMessage(null);
 
-  const fetchAllTasks = () => {
+  const fetchAllTasks = async () => {
     getAllTasks()
-      .then((data) => setTasks(data))
-      .catch();
+      .then((data) => {
+        setTasks(data);
+      })
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   };
 
   const handleTaskCreation = () => {
+    setAlertMessage({ type: "loading", message: "Creazione task..." });
     createTask(newTask)
       .then(() => {
         setUpdate(update + 1);
         setInsertForm(false);
         setNewTask(TaskPayload);
+        setAlertMessage({ type: "success", message: "Task creata!" });
       })
-      .catch();
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   };
 
   const handleTaskUpdate = (taskId: number) => {
+    setAlertMessage({ type: "loading", message: "Aggiornamento task..." });
     updateTask(taskId, newTask)
-      .then(() => setUpdate(update + 1))
-      .catch();
+      .then(() => {
+        setUpdate(update + 1);
+        setAlertMessage({ type: "success", message: "Task aggiornata!" });
+      })
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   };
 
   const handleTaskDelete = (taskId: number) => {
+    setAlertMessage({ type: "loading", message: "Eliminazione task..." });
     deleteTask(taskId)
-      .then(() => setUpdate(update + 1))
-      .catch();
+      .then(() => {
+        setUpdate(update + 1);
+        setAlertMessage({ type: "success", message: "Task eliminata!" });
+      })
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   };
 
   const handleEditTask = (task: Task) => {
@@ -75,11 +103,16 @@ export default function CrudDemo() {
   };
 
   const handleLogout = () => {
+    setAlertMessage({ type: "loading", message: "Logout in corso..." });
     logout()
       .then(() => {
         clearUser();
+        setAlertMessage({ type: "success", message: "Logout eseguito!" });
       })
-      .catch();
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   };
 
   useEffect(() => {
@@ -91,7 +124,7 @@ export default function CrudDemo() {
   if (loading) {
     return (
       <Scaffold id="/crud-demo" className="justify-center items-center">
-        <p className="text-foreground/60">Verifica sessione in corso...</p>
+        <Alert type="loading" message="Verifica sessione in corso..." />
       </Scaffold>
     );
   }
@@ -268,6 +301,13 @@ export default function CrudDemo() {
           ),
         )}
       </section>
+      {alertMessage && (
+        <Alert
+          type={alertMessage.type}
+          message={alertMessage.message}
+          onClose={handleCloseAlert}
+        />
+      )}
     </Scaffold>
   );
 }

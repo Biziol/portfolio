@@ -9,12 +9,15 @@ import Button from "../components/ui/Button";
 import TextArea from "../components/ui/TextArea";
 import { createRewiew, getRating, getRewiews } from "../services/rewiewService";
 import { formatDateTime } from "../utils/formatDateTime";
+import Alert, { type AlertType } from "../components/ui/Alert";
 
 export default function Review() {
   const [rewiews, setRewiews] = useState<Rewiew[]>([]);
   const [newRewiew, setNewRewiew] = useState<Rewiew>(rewiewPayload);
   const [rating, setRating] = useState(0);
   const [update, setUpdate] = useState(0);
+  const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
+  const handleCloseAlert = () => setAlertMessage(null);
 
   async function fetchAllRewiewsAndRating() {
     getRewiews()
@@ -26,12 +29,17 @@ export default function Review() {
   }
 
   async function handleSubmit() {
+    setAlertMessage({ type: "loading", message: "Creazione recensione..." });
     createRewiew(newRewiew)
       .then(() => {
         setUpdate(update + 1);
         setNewRewiew(rewiewPayload);
+        setAlertMessage({ type: "success", message: "Recensione creata!" });
       })
-      .catch();
+      .catch((e) => {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setAlertMessage({ type: "error", message: errorMessage });
+      });
   }
 
   useEffect(() => {
@@ -136,6 +144,13 @@ export default function Review() {
           <span className="text-foreground/60">{rewiew.comment}</span>
         </Card>
       ))}
+      {alertMessage && (
+        <Alert
+          type={alertMessage.type}
+          message={alertMessage.message}
+          onClose={handleCloseAlert}
+        />
+      )}
     </Scaffold>
   );
 }

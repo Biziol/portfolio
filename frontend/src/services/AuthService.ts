@@ -16,8 +16,8 @@ export async function login(username: string, password: string) {
     })
     .then((res) => res.data)
     .catch((e) => {
-      console.error("Error Detail:", e.response?.data);
-      throw e.response?.data || "Errore di login";
+      const errorMessage = e.response?.data || e.message || "Unknown error";
+      throw new Error(errorMessage);
     });
 }
 
@@ -40,8 +40,8 @@ export async function register(
     })
     .then((res) => res.data)
     .catch((e) => {
-      console.error("Error Detail:", e.response?.data);
-      throw e.response?.data || "Errore di registrazione";
+      const errorMessage = e.response?.data || e.message || "Unknown error";
+      throw new Error(errorMessage);
     });
 }
 
