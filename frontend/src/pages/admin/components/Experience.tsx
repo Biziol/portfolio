@@ -2,17 +2,17 @@ import {
   BriefcaseIcon,
   CalendarIcon,
   ExternalLinkIcon,
-  GraduationCapIcon,
+  GraduationCapIcon
 } from "lucide-react";
-import PingIcon from "../assets/icons/PingIcon.svg?react";
-import Scaffold from "../components/Scaffold";
+import PingIcon from "../../../assets/icons/PingIcon.svg?react";
 import { useEffect, useState } from "react";
-import { type WorkAndTraning } from "../interfaces/WorkAndTraning";
-import { getWorkAndTrainings } from "../services/workAndTrainingService";
-import TimeLine, { TimeLineItem } from "../components/TimeLine";
-import Card from "../components/ui/Card";
-import Pill from "../components/ui/Pill";
-import { formatDateTime } from "../utils/formatDateTime";
+import type { WorkAndTraning } from "../../../interfaces/WorkAndTraning";
+import { getWorkAndTrainings } from "../../../services/workAndTrainingService";
+import Scaffold from "../../../components/Scaffold";
+import TimeLine, { TimeLineItem } from "../../../components/TimeLine";
+import Card from "../../../components/ui/Card";
+import { formatDateTime } from "../../../utils/formatDateTime";
+import Pill from "../../../components/ui/Pill";
 
 export default function Experience() {
   const [workAndTraining, setWorkAndTraining] = useState<WorkAndTraning[] | []>(
@@ -54,7 +54,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <Scaffold id="/experience">
+    <Scaffold>
       <h1>Esperienza e Formazione</h1>
 
       <section className="w-full h-max flex flex-col gap-2">

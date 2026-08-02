@@ -26,7 +26,12 @@ export async function createSkill(skill: Skill) {
     .post(`/skills`, skill)
     .then((res) => res.data)
     .catch((e) => {
-      const errorMessage = e.response?.data || e.message || "Unknown error";
+      const data = e.response?.data;
+      const errorMessage =
+        (typeof data === "string" ? data : data?.message || data?.error) ||
+        e.message ||
+        "Unknown error";
+
       throw new Error(errorMessage);
     });
 }

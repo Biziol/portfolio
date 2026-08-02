@@ -87,7 +87,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        if (role == Role.ADMIN) {
+        boolean isAdminExist = false;
+
+        if (!userRepo.findByRole(Role.ADMIN).isEmpty()) {
+            isAdminExist = true;
+        }
+
+        if (role == Role.ADMIN && isAdminExist) {
             try {
                 User current = authService.getAuthUser();
                 if (current == null || !Role.ADMIN.equals(current.getRole())) {
@@ -115,6 +121,11 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         new SecurityContextLogoutHandler().logout(request, response, authentication);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/admin-exist")
+    public ResponseEntity<Boolean> adminExist() {
+        return ResponseEntity.ok(!userRepo.findByRole(Role.ADMIN).isEmpty());
     }
 
     private UserDTO toDto(User user) {

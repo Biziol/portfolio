@@ -21,11 +21,24 @@ export default function Review() {
 
   async function fetchAllRewiewsAndRating() {
     getRewiews()
-      .then((data) => setRewiews(data ?? []))
-      .catch();
+      .then((data) => {
+        setRewiews(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Backend offline o errore nel recupero recensioni:", err);
+        setRewiews([]);
+      });
+
     getRating()
-      .then((data) => setRating(data ?? 0))
-      .catch();
+      .then((data) => {
+        const parsedRating =
+          typeof data === "number" ? data : Number.parseFloat(data);
+        setRating(Number.isNaN(parsedRating) ? 0 : parsedRating);
+      })
+      .catch((err) => {
+        console.error("Backend offline o errore nel recupero del rating:", err);
+        setRating(0);
+      });
   }
 
   async function handleSubmit() {
@@ -112,38 +125,39 @@ export default function Review() {
         </Button>
       </Form>
 
-      {rewiews.map((rewiew) => (
-        <Card key={rewiew.id} className=" w-full gap-2 p-3">
-          <div className="flex justify-between items-center w-full">
-            <p>{rewiew.author}</p>
-            <p className="text-foreground/60">
-              {formatDateTime(
-                rewiew.creationDate || "",
-                "it-IT",
-                true,
-                false,
-                "long",
-              )}
-            </p>
-          </div>
+      {Array.isArray(rewiews) &&
+        rewiews.map((rewiew) => (
+          <Card key={rewiew.id} className=" w-full gap-2 p-3">
+            <div className="flex justify-between items-center w-full">
+              <p>{rewiew.author}</p>
+              <p className="text-foreground/60">
+                {formatDateTime(
+                  rewiew.creationDate || "",
+                  "it-IT",
+                  true,
+                  false,
+                  "long",
+                )}
+              </p>
+            </div>
 
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                size={15}
-                key={star}
-                className={
-                  star <= rewiew.stars
-                    ? "fill-yellow-500 text-yellow-500"
-                    : "text-gray-300"
-                }
-              />
-            ))}
-          </div>
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  size={15}
+                  key={star}
+                  className={
+                    star <= rewiew.stars
+                      ? "fill-yellow-500 text-yellow-500"
+                      : "text-gray-300"
+                  }
+                />
+              ))}
+            </div>
 
-          <span className="text-foreground/60">{rewiew.comment}</span>
-        </Card>
-      ))}
+            <span className="text-foreground/60">{rewiew.comment}</span>
+          </Card>
+        ))}
       {alertMessage && (
         <Alert
           type={alertMessage.type}

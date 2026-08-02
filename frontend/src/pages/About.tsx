@@ -72,11 +72,10 @@ export default function About() {
                 <h4>{f}</h4>
               </div>
               <ul className="w-full pl-4 list-disc marker:text-primary">
-                {skills
-                  ?.filter((s) => s.skillField == f)
-                  .map((s) => (
-                    <li key={s.id}>{s.name}</li>
-                  ))}
+                {Array.isArray(skills) &&
+                  skills
+                    ?.filter((s) => s.skillField == f)
+                    .map((s) => <li key={s.id}>{s.name}</li>)}
               </ul>
             </Card>
           );

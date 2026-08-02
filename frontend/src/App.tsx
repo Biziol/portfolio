@@ -1,4 +1,10 @@
-import { BrowserRouter, useLocation, useNavigate } from "react-router";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router";
 import Home from "./pages/Home";
 import TopBar from "./components/TopBar";
 import Button from "./components/ui/Button";
@@ -10,6 +16,7 @@ import Rewiew from "./pages/Review";
 import Contact from "./pages/Contact";
 import { useEffect, useRef } from "react";
 import { cn } from "./utils/cn";
+import Admin from "./pages/admin/Admin";
 
 function App() {
   return (
@@ -148,38 +155,40 @@ function AppContent() {
 
   return (
     <div className="flex flex-col h-screen overflow-x-hidden">
-      <TopBar className="justify-center 2xl:justify-between">
-        <h2 className="hidden 2xl:block text-nowrap">Fabrizio Lombardi</h2>
-        <div className="lg:flex flex-row gap-4 hidden">
-          {NAV_ITEMS.map((item) => (
-            <Button
-              key={item.label}
-              variant={path === item.path ? "primary" : "transparent"}
-              onClick={() => navigate(item.path)}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </div>
+      {path !== "/admin" && path !== "/admin-page" && (
+        <TopBar className="justify-center 2xl:justify-between">
+          <h2 className="hidden 2xl:block text-nowrap">Fabrizio Lombardi</h2>
+          <div className="lg:flex flex-row gap-4 hidden">
+            {NAV_ITEMS.map((item) => (
+              <Button
+                key={item.label}
+                variant={path === item.path ? "primary" : "transparent"}
+                onClick={() => navigate(item.path)}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </div>
 
-        <div className="grid grid-cols-3 gap-2 lg:hidden bg-muted-foreground/50 p-1 rounded-full w-80 mx-5 items-center justify-items-center">
-          {mobileNavItems.map((item) => (
-            <Button
-              className={cn(
-                "p-1 rounded-full w-full text-center text-nowrap",
-                path === item?.path
-                  ? "text-foreground"
-                  : "text-foreground/30 text-sm",
-              )}
-              key={item?.label}
-              variant={path === item?.path ? "primary" : "transparent"}
-              onClick={() => item && navigate(item.path)}
-            >
-              {item?.label}
-            </Button>
-          ))}
-        </div>
-      </TopBar>
+          <div className="grid grid-cols-3 gap-2 lg:hidden bg-muted-foreground/50 p-1 rounded-full w-80 mx-5 items-center justify-items-center">
+            {mobileNavItems.map((item) => (
+              <Button
+                className={cn(
+                  "p-1 rounded-full w-full text-center text-nowrap",
+                  path === item?.path
+                    ? "text-foreground"
+                    : "text-foreground/30 text-sm",
+                )}
+                key={item?.label}
+                variant={path === item?.path ? "primary" : "transparent"}
+                onClick={() => item && navigate(item.path)}
+              >
+                {item?.label}
+              </Button>
+            ))}
+          </div>
+        </TopBar>
+      )}
 
       <div
         ref={containerRef}
@@ -193,6 +202,11 @@ function AppContent() {
         <Rewiew />
         <Contact />
       </div>
+
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin-page" element={<Admin />} />
+      </Routes>
     </div>
   );
 }

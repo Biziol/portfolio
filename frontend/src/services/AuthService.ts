@@ -51,6 +51,16 @@ export async function checkAuth() {
   });
 }
 
+export async function adminExist() {
+  return await apiClient
+    .get("/auth/admin-exist", {
+      withCredentials: true,
+    })
+    .then((result) => {
+      return result.data;
+    });
+}
+
 export async function logout() {
   try {
     const response = await apiClient.post("/auth/logout", null, {

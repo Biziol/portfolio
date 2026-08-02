@@ -1,9 +1,8 @@
 import Scaffold from "../components/Scaffold";
 import fotoCv from "../assets/FotoCv.png";
-import Linkedin from "../assets/icons/Linkedin.svg?react";
-import GitHub from "../assets/icons/Github.svg?react";
 import MouseAnimation from "../assets/icons/mouseanimation.svg?react";
-import { MailIcon } from "lucide-react";
+import { profileData } from "../data/portfolioData";
+import ContactInformation from "../components/ui/ContactInformation";
 
 export default function Home() {
   return (
@@ -25,33 +24,15 @@ export default function Home() {
       </p>
 
       <div className="flex flex-row gap-3">
-        <a
-          href="https://github.com/Biziol"
-          aria-label="GitHub"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-3 rounded-lg bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-colors"
-        >
-          <GitHub className="w-6 h-6" />
-        </a>
-
-        <a
-          href="https://www.linkedin.com/in/fabrizio-lombardi-76837a209/"
-          aria-label="LinkedIn"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-3 rounded-lg bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-colors"
-        >
-          <Linkedin className="w-6 h-6" />
-        </a>
-
-        <a
-          href="mailto:fabriziolombardi732@gmail.com"
-          aria-label="LinkedIn"
-          className="p-3 rounded-lg bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-colors"
-        >
-          <MailIcon className="w-6 h-6" />
-        </a>
+        {profileData.contacts
+          .filter((c) => ["github", "linkedin", "email"].includes(c.id))
+          .map((contact) => (
+            <ContactInformation
+              key={contact.id}
+              icon={contact.icon}
+              href={contact.href}
+            />
+          ))}
       </div>
 
       <MouseAnimation className="w-10 h-10 absolute bottom-5 text-primary" />
