@@ -34,4 +34,8 @@ public class ArgumentService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public void deleteByWorkAndTrainingId(Long id) {
+        repository.deleteAllByWorkAndTraining(id);
+    }
 }

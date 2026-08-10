@@ -1,9 +1,9 @@
-import type { WorkAndTraning } from "../interfaces/WorkAndTraning";
+import type { Argument } from "../interfaces/Argument";
 import { apiClient } from "./apiClient";
 
-export async function getWorkAndTrainings() {
+export async function getAllArguments() {
   return apiClient
-    .get<WorkAndTraning[]>("/work-and-training")
+    .get<Argument[]>("/arguments")
     .then((res) => res.data)
     .catch((e) => {
       const errorMessage = e.response?.data || e.message || "Unknown error";
@@ -11,9 +11,9 @@ export async function getWorkAndTrainings() {
     });
 }
 
-export async function getWorkAndTrainingById(workAndTrainingId: number) {
+export async function getArgumentById(argumentId: number) {
   return apiClient
-    .get<WorkAndTraning>(`/work-and-training/${workAndTrainingId}`)
+    .get<Argument>(`/arguments/${argumentId}`)
     .then((res) => res.data)
     .catch((e) => {
       const errorMessage = e.response?.data || e.message || "Unknown error";
@@ -21,9 +21,9 @@ export async function getWorkAndTrainingById(workAndTrainingId: number) {
     });
 }
 
-export async function createWorkAndTraining(workAndTraining: WorkAndTraning) {
+export async function createArgument(argument: Argument) {
   return apiClient
-    .post<WorkAndTraning>("/work-and-training", workAndTraining)
+    .post<Argument>("/arguments", argument)
     .then((res) => res.data)
     .catch((e) => {
       const errorMessage = e.response?.data || e.message || "Unknown error";
@@ -31,15 +31,9 @@ export async function createWorkAndTraining(workAndTraining: WorkAndTraning) {
     });
 }
 
-export async function updateWorkAndTraining(
-  workAndTrainingId: number,
-  workAndTraining: WorkAndTraning,
-) {
+export async function updateArgument(argumentId: number, argument: Argument) {
   return apiClient
-    .put<WorkAndTraning>(
-      `/work-and-training/${workAndTrainingId}`,
-      workAndTraining,
-    )
+    .put<Argument>(`/arguments/${argumentId}`, argument)
     .then((res) => res.data)
     .catch((e) => {
       const errorMessage = e.response?.data || e.message || "Unknown error";
@@ -47,9 +41,9 @@ export async function updateWorkAndTraining(
     });
 }
 
-export async function deleteWorkAndTraining(workAndTrainingId: number) {
+export async function deleteArgument(argumentId: number) {
   return apiClient
-    .delete(`/work-and-training/${workAndTrainingId}`)
+    .delete(`/arguments/${argumentId}`)
     .then((res) => res.data)
     .catch((e) => {
       const errorMessage = e.response?.data || e.message || "Unknown error";
@@ -58,9 +52,9 @@ export async function deleteWorkAndTraining(workAndTrainingId: number) {
 }
 
 export default {
-  getWorkAndTrainings,
-  getWorkAndTrainingById,
-  createWorkAndTraining,
-  updateWorkAndTraining,
-  deleteWorkAndTraining,
+  getAllArguments,
+  getArgumentById,
+  createArgument,
+  updateArgument,
+  deleteArgument,
 };

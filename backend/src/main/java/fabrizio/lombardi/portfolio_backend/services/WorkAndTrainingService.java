@@ -30,4 +30,8 @@ public class WorkAndTrainingService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public void delete(WorkAndTraining entity) {
+        repository.delete(entity);
+    }
 }

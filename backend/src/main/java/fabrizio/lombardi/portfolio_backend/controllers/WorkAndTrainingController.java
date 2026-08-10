@@ -3,6 +3,7 @@ package fabrizio.lombardi.portfolio_backend.controllers;
 import fabrizio.lombardi.portfolio_backend.mappers.WorkAndTrainingMapper;
 import fabrizio.lombardi.portfolio_backend.models.WorkAndTraining;
 import fabrizio.lombardi.portfolio_backend.models.dtos.WorkAndTrainingDto;
+import fabrizio.lombardi.portfolio_backend.services.ArgumentService;
 import fabrizio.lombardi.portfolio_backend.services.WorkAndTrainingService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -16,10 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class WorkAndTrainingController {
     private final WorkAndTrainingService service;
     private final WorkAndTrainingMapper mapper;
+    private final ArgumentService argumentService;
 
-    public WorkAndTrainingController(WorkAndTrainingService service, WorkAndTrainingMapper mapper) {
+    public WorkAndTrainingController(WorkAndTrainingService service, WorkAndTrainingMapper mapper,
+            ArgumentService argumentService) {
         this.service = service;
         this.mapper = mapper;
+        this.argumentService = argumentService;
     }
 
     @Operation(summary = "Ritorna una lista di esperienze")
@@ -58,8 +62,24 @@ public class WorkAndTrainingController {
     @Operation(summary = "Cancella una esperienza (admin-only)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        try {
+            argumentService.deleteByWorkAndTrainingId(id);
+            service.deleteById(id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Errore nella cancellazione: " + e.getMessage());
+        }
+
+        /*
+         * try {
+         * service.deleteById(id);
+         * } catch (Exception e) {
+         * return
+         * ResponseEntity.status(500).body("Errore nella cancellazione dell'esperienza"
+         * );
+         * }
+         */
+
+        return ResponseEntity.ok("Cancellazione avvenuta con successo!");
     }
 }

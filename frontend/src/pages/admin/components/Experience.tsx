@@ -1,28 +1,61 @@
 import {
   BriefcaseIcon,
   CalendarIcon,
+  Edit2Icon,
   ExternalLinkIcon,
-  GraduationCapIcon
+  GraduationCapIcon,
+  PlusIcon,
+  Trash2Icon,
 } from "lucide-react";
 import PingIcon from "../../../assets/icons/PingIcon.svg?react";
 import { useEffect, useState } from "react";
 import type { WorkAndTraning } from "../../../interfaces/WorkAndTraning";
-import { getWorkAndTrainings } from "../../../services/workAndTrainingService";
+import {
+  deleteWorkAndTraining,
+  getWorkAndTrainings,
+} from "../../../services/workAndTrainingService";
 import Scaffold from "../../../components/Scaffold";
 import TimeLine, { TimeLineItem } from "../../../components/TimeLine";
 import Card from "../../../components/ui/Card";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import Pill from "../../../components/ui/Pill";
+import Button from "../../../components/ui/Button";
+import type { AddExperienceParams } from "./AddExperience";
+import AddExperience from "./AddExperience";
+import AlertDialog from "./AlertDialog";
+import type { AlertType } from "../../../components/ui/Alert";
+import Alert from "../../../components/ui/Alert";
 
 export default function Experience() {
   const [workAndTraining, setWorkAndTraining] = useState<WorkAndTraning[] | []>(
     [],
   );
+  const [itemToDelete, setItemToDelete] = useState<number>(0);
+
+  const [workAndTrainingTemp, setWorkAndTrainingTemp] =
+    useState<AddExperienceParams | null>(null);
+
+  const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
+  const handleCloseAlert = () => setAlertMessage(null);
 
   async function fetchWorkAndTraining() {
     await getWorkAndTrainings()
       .then((data) => setWorkAndTraining(data))
       .catch();
+  }
+
+  async function handleDeleteExperience() {
+    if (itemToDelete > 0) {
+      await deleteWorkAndTraining(itemToDelete)
+        .then((data) => {
+          setAlertMessage({ type: "success", message: data });
+          fetchWorkAndTraining();
+        })
+        .catch((e) => {
+          const errorMessage = e instanceof Error ? e.message : String(e);
+          setAlertMessage({ type: "error", message: errorMessage });
+        });
+    }
   }
 
   const isInProgress = (endDate: string | null) => {
@@ -63,6 +96,17 @@ export default function Experience() {
             <BriefcaseIcon className="text-primary-foreground w-7 h-7" />
           </span>
           <h3>Esperienza Lavorativa</h3>
+          <Button
+            variant="tertiary"
+            onClick={() =>
+              setWorkAndTrainingTemp({
+                ...workAndTrainingTemp,
+                type: "WORK",
+              })
+            }
+          >
+            <PlusIcon />
+          </Button>
         </div>
         <div className="ml-5">
           <TimeLine verticalPadding={5} lineColor="bg-primary/50">
@@ -124,6 +168,26 @@ export default function Experience() {
                           ))}
                         </ul>
                       )}
+                      <div className="absolute right-5 bottom-5 flex flex-col gap-2">
+                        <Button
+                          variant="tertiary"
+                          onClick={() => setItemToDelete(work.id)}
+                        >
+                          <Trash2Icon />
+                        </Button>
+                        <Button
+                          variant="tertiary"
+                          onClick={() =>
+                            setWorkAndTrainingTemp({
+                              ...workAndTrainingTemp,
+                              type: "WORK",
+                              experienceParam: work,
+                            })
+                          }
+                        >
+                          <Edit2Icon />
+                        </Button>
+                      </div>
                     </Card>
                   </TimeLineItem>
                 ))}
@@ -137,6 +201,17 @@ export default function Experience() {
             <GraduationCapIcon className="text-primary-foreground w-7 h-7" />
           </span>
           <h3>Istruzione e Formazione</h3>
+          <Button
+            variant="tertiary"
+            onClick={() =>
+              setWorkAndTrainingTemp({
+                ...workAndTrainingTemp,
+                type: "TRAINING",
+              })
+            }
+          >
+            <PlusIcon />
+          </Button>
         </div>
 
         <div className="ml-5">
@@ -212,12 +287,59 @@ export default function Experience() {
                       {training.graduationType == "TEN_BASE" && (
                         <Pill>Voto: {training.graduation}/10</Pill>
                       )}
+                      <div className="absolute right-5 bottom-5 flex flex-col gap-2">
+                        <Button
+                          variant="tertiary"
+                          onClick={() => setItemToDelete(training.id)}
+                        >
+                          <Trash2Icon />
+                        </Button>
+                        <Button
+                          variant="tertiary"
+                          onClick={() =>
+                            setWorkAndTrainingTemp({
+                              ...workAndTrainingTemp,
+                              type: "TRAINING",
+                              experienceParam: training,
+                            })
+                          }
+                        >
+                          <Edit2Icon />
+                        </Button>
+                      </div>
                     </Card>
                   </TimeLineItem>
                 ))}
           </TimeLine>
         </div>
       </div>
+      {workAndTrainingTemp && (
+        <AddExperience
+          type={workAndTrainingTemp.type}
+          experienceParam={workAndTrainingTemp.experienceParam}
+          onClose={() => {
+            setWorkAndTrainingTemp(null);
+            fetchWorkAndTraining();
+          }}
+        />
+      )}
+      {itemToDelete > 0 && (
+        <AlertDialog
+          message="Sei sicuro di voler eliminare l'esperienza Lavorativa/Formativa?"
+          onAcept={() => handleDeleteExperience()}
+          onClose={() => setItemToDelete(0)}
+        ></AlertDialog>
+      )}
+      {alertMessage && (
+        <Alert
+          type={alertMessage.type}
+          message={alertMessage.message}
+          onClose={() => {
+            handleCloseAlert();
+            setItemToDelete(0);
+          }}
+        />
+      )}
     </Scaffold>
   );
 }

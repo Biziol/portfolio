@@ -10,9 +10,23 @@ export interface WorkAndTraning {
   location: string;
   startDate: string;
   endDate: string | null;
-  graduation: number;
+  graduation: number | null;
   graduationType: GraduationType;
   website: string;
   type: WorkType;
   arguments: Argument[] | null;
 }
+
+export const emptyWorkAndTraining: WorkAndTraning = {
+  id: 0,
+  title: "",
+  instituteOrCompany: "",
+  location: "",
+  startDate: "",
+  endDate: null,
+  graduation: null,
+  graduationType: null as unknown as GraduationType,
+  website: "",
+  type: null as unknown as WorkType,
+  arguments: null,
+};
