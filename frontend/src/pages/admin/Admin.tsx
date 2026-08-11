@@ -12,7 +12,7 @@ import { logout } from "../../services/AuthService";
 import Experience from "./components/Experience";
 
 export default function Admin() {
-  const sections = ["About", "Esperienza", "Contatti"];
+  const sections = ["About", "Esperienza"];
   const [selectedSection, setSelectedSection] = useState<string>("About");
   const { isAuthenticated, loading, clearUser, user } = UseAuth();
   const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
