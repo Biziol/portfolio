@@ -29,6 +29,16 @@ public class ArgumentMapper {
         return argument;
     }
 
+    public Argument updateEntity(Argument existing, ArgumentDto dto) {
+        existing.setText(dto.getText());
+
+        if (dto.getWorkAndTrainingId() != null) {
+            existing.setWorkAndTraining(resolveWorkAndTraining(dto.getWorkAndTrainingId()));
+        }
+
+        return existing;
+    }
+
     private WorkAndTraining resolveWorkAndTraining(Long workAndTrainingId) {
         if (workAndTrainingId == null) {
             return null;

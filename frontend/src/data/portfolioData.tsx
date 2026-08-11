@@ -16,6 +16,15 @@ export const profileData = {
   role: "Fullstack Developer | React • Spring Boot • Flutter",
   bio: "Appassionato di tecnologia con focus sullo sviluppo Fullstack. Creo soluzioni moderne e performanti attraverso il learning by doing.",
   avatar: "/favicon.png",
+  patenti: ["AM", "B"],
+  disponibilità: "Immediata",
+
+  collaborations: [
+    "Progetti Fullstack",
+    "Sviluppo Frontend",
+    "Sviluppo Backend",
+    "App Mobile",
+  ],
 
   contacts: [
     {

@@ -30,7 +30,9 @@ export default function Experience() {
   const [workAndTraining, setWorkAndTraining] = useState<WorkAndTraning[] | []>(
     [],
   );
-  const [itemToDelete, setItemToDelete] = useState<number>(0);
+  const [experienceToDelete, setExperienceToDelete] =
+    useState<WorkAndTraning | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [workAndTrainingTemp, setWorkAndTrainingTemp] =
     useState<AddExperienceParams | null>(null);
@@ -39,51 +41,50 @@ export default function Experience() {
   const handleCloseAlert = () => setAlertMessage(null);
 
   async function fetchWorkAndTraining() {
-    await getWorkAndTrainings()
-      .then((data) => setWorkAndTraining(data))
-      .catch();
+    try {
+      const data = await getWorkAndTrainings();
+      setWorkAndTraining(data);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      setAlertMessage({ type: "error", message: errorMessage });
+    }
   }
 
   async function handleDeleteExperience() {
-    if (itemToDelete > 0) {
-      await deleteWorkAndTraining(itemToDelete)
-        .then((data) => {
-          setAlertMessage({ type: "success", message: data });
-          fetchWorkAndTraining();
-        })
-        .catch((e) => {
-          const errorMessage = e instanceof Error ? e.message : String(e);
-          setAlertMessage({ type: "error", message: errorMessage });
-        });
+    if (!experienceToDelete || isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const message = await deleteWorkAndTraining(experienceToDelete.id);
+      setAlertMessage({ type: "success", message });
+      await fetchWorkAndTraining();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      setAlertMessage({ type: "error", message: errorMessage });
+    } finally {
+      setIsDeleting(false);
+      setExperienceToDelete(null);
     }
   }
 
   const isInProgress = (endDate: string | null) => {
-    if (endDate) {
-      const start = new Date();
-      const end = new Date(endDate);
-
-      const timeDiff = end.getTime() - start.getTime();
-      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-      console.log(
-        "endDate: " +
-          endDate +
-          " start: " +
-          start +
-          " end: " +
-          end +
-          "dayDiff: " +
-          daysDiff,
-      );
-      return daysDiff > 0;
-    } else {
+    if (!endDate) {
       return true;
     }
+
+    const now = new Date();
+    return new Date(endDate).getTime() > now.getTime();
   };
 
   useEffect(() => {
-    fetchWorkAndTraining();
+    void (async () => {
+      await fetchWorkAndTraining();
+    })();
   }, []);
 
   return (
@@ -98,12 +99,7 @@ export default function Experience() {
           <h3>Esperienza Lavorativa</h3>
           <Button
             variant="tertiary"
-            onClick={() =>
-              setWorkAndTrainingTemp({
-                ...workAndTrainingTemp,
-                type: "WORK",
-              })
-            }
+            onClick={() => setWorkAndTrainingTemp({ type: "WORK" })}
           >
             <PlusIcon />
           </Button>
@@ -145,48 +141,52 @@ export default function Experience() {
                         </p>
                       </div>
 
-                      <div className="text-foreground/60">
-                        <p className="flex gap-2 items-center">
-                          {work.instituteOrCompany} |
-                          <a
-                            className="text-xs flex"
-                            href={work.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLinkIcon size={15} />
-                            Vai al sito
-                          </a>
-                        </p>
-                        <p>{work.location}</p>
-                      </div>
+                      <div className="flex flex-row w-full justify-between">
+                        <div className="flex flex-col justify-between">
+                          <div className="text-foreground/60">
+                            <p className="flex gap-2 items-center">
+                              {work.instituteOrCompany} |
+                              <a
+                                className="text-xs flex"
+                                href={work.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLinkIcon size={15} />
+                                Vai al sito
+                              </a>
+                            </p>
+                            <p>{work.location}</p>
+                          </div>
+                          {work.arguments != null &&
+                            work.arguments.length > 0 && (
+                              <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl">
+                                {work.arguments.map((argument) => (
+                                  <li key={argument.id}>{argument.text}</li>
+                                ))}
+                              </ul>
+                            )}
+                        </div>
 
-                      {work.arguments != null && work.arguments.length > 0 && (
-                        <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl">
-                          {work.arguments.map((argument) => (
-                            <li key={argument.id}>{argument.text}</li>
-                          ))}
-                        </ul>
-                      )}
-                      <div className="absolute right-5 bottom-5 flex flex-col gap-2">
-                        <Button
-                          variant="tertiary"
-                          onClick={() => setItemToDelete(work.id)}
-                        >
-                          <Trash2Icon />
-                        </Button>
-                        <Button
-                          variant="tertiary"
-                          onClick={() =>
-                            setWorkAndTrainingTemp({
-                              ...workAndTrainingTemp,
-                              type: "WORK",
-                              experienceParam: work,
-                            })
-                          }
-                        >
-                          <Edit2Icon />
-                        </Button>
+                        <div className="flex flex-col gap-2 mt-auto">
+                          <Button
+                            variant="tertiary"
+                            onClick={() => setExperienceToDelete(work)}
+                          >
+                            <Trash2Icon />
+                          </Button>
+                          <Button
+                            variant="tertiary"
+                            onClick={() =>
+                              setWorkAndTrainingTemp({
+                                type: "WORK",
+                                experienceParam: work,
+                              })
+                            }
+                          >
+                            <Edit2Icon />
+                          </Button>
+                        </div>
                       </div>
                     </Card>
                   </TimeLineItem>
@@ -203,12 +203,7 @@ export default function Experience() {
           <h3>Istruzione e Formazione</h3>
           <Button
             variant="tertiary"
-            onClick={() =>
-              setWorkAndTrainingTemp({
-                ...workAndTrainingTemp,
-                type: "TRAINING",
-              })
-            }
+            onClick={() => setWorkAndTrainingTemp({ type: "TRAINING" })}
           >
             <PlusIcon />
           </Button>
@@ -251,61 +246,63 @@ export default function Experience() {
                         </p>
                       </div>
 
-                      <div className="text-foreground/60">
-                        <p className="flex gap-2 items-center text-nowrap">
-                          {training.instituteOrCompany} |
-                          <a
-                            className="text-xs flex"
-                            href={training.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                      <div className="flex flex-row w-full justify-between">
+                        <div className="flex flex-col justify-between">
+                          <div className="text-foreground/60">
+                            <p className="flex gap-2 items-center text-nowrap">
+                              {training.instituteOrCompany} |
+                              <a
+                                className="text-xs flex"
+                                href={training.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLinkIcon size={15} />
+                                Vai al sito
+                              </a>
+                            </p>
+                            <p>{training.location}</p>
+                          </div>
+                          {training.arguments != null &&
+                            training.arguments.length > 0 && (
+                              <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl">
+                                {training.arguments.map((argument) => (
+                                  <li key={argument.id}>{argument.text}</li>
+                                ))}
+                              </ul>
+                            )}
+
+                          {training.graduationType == "EQF" && (
+                            <Pill>Livello EQF: {training.graduation}</Pill>
+                          )}
+
+                          {training.graduationType == "HUNDRED_BASE" && (
+                            <Pill>Voto: {training.graduation}/100</Pill>
+                          )}
+
+                          {training.graduationType == "TEN_BASE" && (
+                            <Pill>Voto: {training.graduation}/10</Pill>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2 mt-auto">
+                          <Button
+                            variant="tertiary"
+                            onClick={() => setExperienceToDelete(training)}
                           >
-                            <ExternalLinkIcon size={15} />
-                            Vai al sito
-                          </a>
-                        </p>
-                        <p>{training.location}</p>
-                      </div>
-
-                      {training.arguments != null &&
-                        training.arguments.length > 0 && (
-                          <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl">
-                            {training.arguments.map((argument) => (
-                              <li key={argument.id}>{argument.text}</li>
-                            ))}
-                          </ul>
-                        )}
-
-                      {training.graduationType == "EQF" && (
-                        <Pill>Livello EQF: {training.graduation}</Pill>
-                      )}
-
-                      {training.graduationType == "HUNDRED_BASE" && (
-                        <Pill>Voto: {training.graduation}/100</Pill>
-                      )}
-
-                      {training.graduationType == "TEN_BASE" && (
-                        <Pill>Voto: {training.graduation}/10</Pill>
-                      )}
-                      <div className="absolute right-5 bottom-5 flex flex-col gap-2">
-                        <Button
-                          variant="tertiary"
-                          onClick={() => setItemToDelete(training.id)}
-                        >
-                          <Trash2Icon />
-                        </Button>
-                        <Button
-                          variant="tertiary"
-                          onClick={() =>
-                            setWorkAndTrainingTemp({
-                              ...workAndTrainingTemp,
-                              type: "TRAINING",
-                              experienceParam: training,
-                            })
-                          }
-                        >
-                          <Edit2Icon />
-                        </Button>
+                            <Trash2Icon />
+                          </Button>
+                          <Button
+                            variant="tertiary"
+                            onClick={() =>
+                              setWorkAndTrainingTemp({
+                                type: "TRAINING",
+                                experienceParam: training,
+                              })
+                            }
+                          >
+                            <Edit2Icon />
+                          </Button>
+                        </div>
                       </div>
                     </Card>
                   </TimeLineItem>
@@ -315,6 +312,7 @@ export default function Experience() {
       </div>
       {workAndTrainingTemp && (
         <AddExperience
+          key={`${workAndTrainingTemp.type}-${workAndTrainingTemp.experienceParam?.id ?? "new"}`}
           type={workAndTrainingTemp.type}
           experienceParam={workAndTrainingTemp.experienceParam}
           onClose={() => {
@@ -323,11 +321,13 @@ export default function Experience() {
           }}
         />
       )}
-      {itemToDelete > 0 && (
+      {experienceToDelete && (
         <AlertDialog
-          message="Sei sicuro di voler eliminare l'esperienza Lavorativa/Formativa?"
-          onAcept={() => handleDeleteExperience()}
-          onClose={() => setItemToDelete(0)}
+          message={`Sei sicuro di voler eliminare ${
+            experienceToDelete.title || "questa esperienza"
+          }?`}
+          onAccept={() => handleDeleteExperience()}
+          onClose={() => setExperienceToDelete(null)}
         ></AlertDialog>
       )}
       {alertMessage && (
@@ -336,7 +336,7 @@ export default function Experience() {
           message={alertMessage.message}
           onClose={() => {
             handleCloseAlert();
-            setItemToDelete(0);
+            setExperienceToDelete(null);
           }}
         />
       )}

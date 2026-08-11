@@ -53,16 +53,18 @@ export function Select({
 
       {isOpen && (
         <div className="relative w-full flex flex-col bg-muted-foreground rounded-lg">
-          {selectItems.map((item) =>
-            cloneElement(item, {
-              onClick: (v: string) => {
-                setSelectedValue(v);
-                setIsOpen(false);
-                onChange(v);
-              },
-              selectedValue: value,
-            }),
-          )}
+          {selectItems
+            .filter((item) => item.props.value != selectedValue)
+            .map((item) =>
+              cloneElement(item, {
+                onClick: (v: string) => {
+                  setSelectedValue(v);
+                  setIsOpen(false);
+                  onChange(v);
+                },
+                selectedValue: value,
+              }),
+            )}
         </div>
       )}
     </div>
@@ -87,7 +89,7 @@ export function SelectItem({
       type="button"
       variant="transparent"
       className={cn(
-        "w-full",
+        "w-full justify-start",
         selectedValue == value ? "bg-primary/20" : "bg-transparent",
       )}
     >

@@ -1,4 +1,12 @@
-import { BriefcaseIcon, Save, SchoolIcon, SendIcon, XIcon } from "lucide-react";
+import {
+  BriefcaseIcon,
+  Edit2Icon,
+  Save,
+  SchoolIcon,
+  SendIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import Button from "../../../components/ui/Button";
 import {
   emptyWorkAndTraining,
@@ -15,10 +23,21 @@ import {
 } from "../../../interfaces/enums/GraduationType";
 import { cn } from "../../../utils/cn";
 import { type Argument } from "../../../interfaces/Argument";
-import { createWorkAndTraining } from "../../../services/workAndTrainingService";
-import { createArgument } from "../../../services/argumentService";
+import {
+  createWorkAndTraining,
+  updateWorkAndTraining,
+} from "../../../services/workAndTrainingService";
+import {
+  createArgument,
+  deleteArgument,
+  updateArgument,
+} from "../../../services/argumentService";
 import type { AlertType } from "../../../components/ui/Alert";
 import Alert from "../../../components/ui/Alert";
+
+type EditableArgument = Argument & {
+  localId: string;
+};
 
 export interface AddExperienceParams {
   type: WorkType;
@@ -27,60 +46,149 @@ export interface AddExperienceParams {
 }
 export default function AddExperience({
   type,
-  experienceParam = emptyWorkAndTraining,
+  experienceParam,
   onClose,
 }: Readonly<AddExperienceParams>) {
   const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [selectedArgumentLocalId, setSelectedArgumentLocalId] = useState<
+    string | null
+  >(null);
   const handleCloseAlert = () => setAlertMessage(null);
+  const initialExperience = experienceParam ?? emptyWorkAndTraining;
+  const initialArguments = initialExperience.arguments || [];
   const [experience, setExperience] = useState<WorkAndTraning>({
-    ...experienceParam,
+    ...initialExperience,
     type: type,
   });
   const sections = ["general", "arguments"];
   const [currentSection, setCurrentSection] = useState("general");
-  const [experienceArguments, setExperienceArguments] = useState<Argument[]>(
-    experienceParam.arguments || [],
+  const [experienceArguments, setExperienceArguments] = useState<
+    EditableArgument[]
+  >(
+    initialArguments.map((argument) => ({
+      ...argument,
+      localId: `server-${argument.id}`,
+    })),
   );
   const [newArgument, setNewArgument] = useState("");
+  const isEditing = Boolean(initialExperience.id > 0);
+
+  async function persistArguments(savedExperience: WorkAndTraning) {
+    const argumentsToSave = experienceArguments.map((arg) => ({
+      ...arg,
+      workAndTrainingId: savedExperience.id,
+    }));
+
+    if (!isEditing) {
+      await Promise.all(argumentsToSave.map((arg) => createArgument(arg)));
+      return;
+    }
+
+    const currentArgumentsById = new Map(
+      argumentsToSave
+        .filter((arg) => arg.id > 0)
+        .map((arg) => [arg.id, arg] as const),
+    );
+    const existingArgumentsById = new Map(
+      initialArguments.map((arg) => [arg.id, arg] as const),
+    );
+
+    const argumentsToCreate = argumentsToSave.filter((arg) => arg.id === 0);
+    const argumentsToUpdate = argumentsToSave.filter((arg) => {
+      const existingArgument = existingArgumentsById.get(arg.id);
+      return arg.id > 0 && existingArgument?.text !== arg.text;
+    });
+    const argumentsToDelete = initialArguments.filter(
+      (arg) => !currentArgumentsById.has(arg.id),
+    );
+
+    await Promise.all(argumentsToCreate.map((arg) => createArgument(arg)));
+    await Promise.all(
+      argumentsToUpdate.map((arg) => updateArgument(arg.id, arg)),
+    );
+    await Promise.all(argumentsToDelete.map((arg) => deleteArgument(arg.id)));
+  }
+
+  function resetArgumentDraft() {
+    setNewArgument("");
+    setSelectedArgumentLocalId(null);
+  }
+
+  function handleSaveArgumentDraft() {
+    const normalizedText = newArgument.trim();
+
+    if (!normalizedText) {
+      return;
+    }
+
+    if (selectedArgumentLocalId === null) {
+      const createdArgument: Argument = {
+        id: 0,
+        text: normalizedText,
+        workAndTrainingId: initialExperience.id || null,
+      };
+
+      setExperienceArguments((prev) => [
+        ...prev,
+        {
+          ...createdArgument,
+          localId: crypto.randomUUID(),
+        },
+      ]);
+      resetArgumentDraft();
+      return;
+    }
+
+    setExperienceArguments((prev) =>
+      prev.map((argument) =>
+        argument.localId === selectedArgumentLocalId
+          ? { ...argument, text: normalizedText }
+          : argument,
+      ),
+    );
+    resetArgumentDraft();
+  }
+
+  function handleEditArgument(argument: EditableArgument) {
+    setSelectedArgumentLocalId(argument.localId);
+    setNewArgument(argument.text);
+    setCurrentSection("arguments");
+  }
+
+  function handleDeleteArgument(argument: EditableArgument) {
+    setExperienceArguments((prev) =>
+      prev.filter(
+        (currentArgument) => currentArgument.localId !== argument.localId,
+      ),
+    );
+
+    if (selectedArgumentLocalId === argument.localId) {
+      resetArgumentDraft();
+    }
+  }
 
   async function handleSubmit() {
+    if (isSaving) {
+      return;
+    }
+
+    setIsSaving(true);
     setAlertMessage({ type: "loading", message: "Salvataggio..." });
     try {
-      const result: WorkAndTraning = await createWorkAndTraining(experience);
+      const savedExperience = isEditing
+        ? await updateWorkAndTraining(initialExperience.id, experience)
+        : await createWorkAndTraining(experience);
 
-      if (!experienceParam) {
-        const updatedArguments = experienceArguments.map((arg) => ({
-          ...arg,
-          workAndTrainingId: result.id,
-        }));
-
-        setExperienceArguments(updatedArguments);
-
-        await Promise.all(updatedArguments.map((arg) => createArgument(arg)));
-      } else {
-        const existingIds = new Set(
-          (experienceParam.arguments || []).map((savedArg) => savedArg.id),
-        );
-
-        const newArgumentsToSave = experienceArguments.filter(
-          (arg) => arg.id === 0 || !existingIds.has(arg.id),
-        );
-
-        await Promise.all(
-          newArgumentsToSave.map((arg) =>
-            createArgument({
-              ...arg,
-              workAndTrainingId: result.id,
-            }),
-          ),
-        );
-      }
+      await persistArguments(savedExperience);
 
       setAlertMessage({ type: "success", message: "Salvato con successo!" });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       setAlertMessage({ type: "error", message: errorMessage });
+    } finally {
+      setIsSaving(false);
     }
   }
 
@@ -189,9 +297,36 @@ export default function AddExperience({
 
         {currentSection == "arguments" && (
           <div className="flex flex-col gap-4">
-            <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl h-50 overflow-y-auto">
+            <ul className="w-full space-y-2 h-50 overflow-y-auto">
               {experienceArguments?.map((a) => (
-                <li key={a.id}>{a.text}</li>
+                <li
+                  key={a.localId}
+                  className={cn(
+                    "flex items-start justify-between gap-3 rounded-lg border border-border/60 px-3 py-2",
+                    selectedArgumentLocalId === a.localId &&
+                      "border-primary bg-primary/5",
+                  )}
+                >
+                  <span className="min-w-0 wrap-break-word">{a.text}</span>
+                  <div className="flex shrink-0 gap-2">
+                    <Button
+                      type="button"
+                      variant="transparent"
+                      className="px-2"
+                      onClick={() => handleEditArgument(a)}
+                    >
+                      <Edit2Icon />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="transparent"
+                      className="px-2"
+                      onClick={() => handleDeleteArgument(a)}
+                    >
+                      <Trash2Icon />
+                    </Button>
+                  </div>
+                </li>
               ))}
             </ul>
 
@@ -200,33 +335,33 @@ export default function AddExperience({
                 type="text"
                 value={newArgument}
                 onChange={(v) => setNewArgument(v)}
+                placeholder="Scrivi un argomento"
               />
               <Button
+                type="button"
                 variant="tertiary"
-                onClick={() => {
-                  if (!newArgument.trim()) return;
-
-                  const createdArgument: Argument = {
-                    id: 0,
-                    text: newArgument,
-                    workAndTrainingId: experienceParam.id || null,
-                  };
-
-                  // 3. Aggiungi il nuovo oggetto all'array esistente
-                  setExperienceArguments((prev) => [...prev, createdArgument]);
-
-                  // 4. Reset dello stato dell'input di testo
-                  setNewArgument("");
-                }}
+                onClick={handleSaveArgumentDraft}
+                disabled={!newArgument.trim()}
               >
                 <Save />
+                {selectedArgumentLocalId === null ? "Aggiungi" : "Aggiorna"}
               </Button>
             </div>
+            {selectedArgumentLocalId !== null && (
+              <Button
+                type="button"
+                variant="transparent"
+                onClick={resetArgumentDraft}
+              >
+                <XIcon />
+                Annulla modifica
+              </Button>
+            )}
           </div>
         )}
 
         <div className="flex flex-row justify-between w-full gap-2">
-          <Button onClick={onClose} variant="secondary">
+          <Button type="button" onClick={onClose} variant="secondary">
             <XIcon />
             Chiudi
           </Button>
@@ -234,6 +369,7 @@ export default function AddExperience({
             {sections.map((s) => (
               <Button
                 key={s}
+                type="button"
                 variant={s != currentSection ? "transparent" : "tertiary"}
                 className={cn(
                   "rounded-full p-0 bg-muted-foreground/50 w-10 h-3",
@@ -243,9 +379,9 @@ export default function AddExperience({
               ></Button>
             ))}
           </div>
-          <Button type="submit">
+          <Button type="submit" disabled={isSaving}>
             <SendIcon />
-            Invia
+            {isSaving ? "Salvataggio..." : "Invia"}
           </Button>
         </div>
       </Form>
@@ -255,7 +391,7 @@ export default function AddExperience({
           message={alertMessage.message}
           onClose={() => {
             handleCloseAlert();
-            if (onClose) {
+            if (onClose && alertMessage.type !== "loading") {
               onClose();
             }
           }}

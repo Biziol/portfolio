@@ -17,7 +17,7 @@ export default function Pill({
   return (
     <span
       className={cn(
-        "flex gap-1 items-center px-2 py-0 text-xs font-semibold border-border bg-muted-foreground border rounded-lg",
+        "flex gap-1 items-center px-2 py-0 text-xs font-semibold border-border bg-muted-foreground border rounded-lg w-max",
         className,
       )}
       style={style ?? (color ? { backgroundColor: color } : undefined)}

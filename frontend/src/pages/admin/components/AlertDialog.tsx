@@ -4,13 +4,13 @@ import Button from "../../../components/ui/Button";
 
 interface AlertDialogProps {
   message: string;
-  onAcept: () => void;
+  onAccept: () => void;
   onClose: () => void;
 }
 
 export default function AlertDialog({
   message,
-  onAcept,
+  onAccept,
   onClose,
 }: Readonly<AlertDialogProps>) {
   return (
@@ -28,7 +28,7 @@ export default function AlertDialog({
             <XIcon />
             Chiudi
           </Button>
-          <Button onClick={onAcept}>
+          <Button onClick={onAccept}>
             <CheckCircle2Icon />
             Ok
           </Button>

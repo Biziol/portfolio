@@ -1,6 +1,7 @@
 package fabrizio.lombardi.portfolio_backend.controllers;
 
 import fabrizio.lombardi.portfolio_backend.mappers.ArgumentMapper;
+import fabrizio.lombardi.portfolio_backend.models.Argument;
 import fabrizio.lombardi.portfolio_backend.models.dtos.ArgumentDto;
 import fabrizio.lombardi.portfolio_backend.services.ArgumentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,18 +47,23 @@ public class ArgumentController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ArgumentDto> update(@PathVariable Long id, @RequestBody ArgumentDto body) {
-        return service.findById(id).map(existing -> {
-            var entity = mapper.toEntity(body);
-            entity.setId(existing.getId());
-            return ResponseEntity.ok(mapper.toDto(service.save(entity)));
-        }).orElse(ResponseEntity.notFound().build());
+        return service.findById(id)
+                .map(existing -> {
+                    Argument updated = mapper.updateEntity(existing, body);
+                    return ResponseEntity.ok(mapper.toDto(service.save(updated)));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Cancella un argomento (admin-only)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.status(404).body("Argument not found");
+        }
+
         service.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Cancellazione avvenuta con successo!");
     }
 }

@@ -44,10 +44,9 @@ export default function Contact() {
             <h4 className="font-semibold">Tipologie di Collaborazione</h4>
 
             <ul className="w-full pl-5 list-disc marker:text-primary marker:text-2xl">
-              <li>Progetti Fullstack</li>
-              <li>Sviluppo Frontend</li>
-              <li>Sviluppo Backend</li>
-              <li>App Mobile</li>
+              {profileData.collaborations.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
             </ul>
           </section>
           <span className="h-full" />
@@ -64,11 +63,17 @@ export default function Contact() {
               </span>
 
               <span className="flex gap-1">
-                Patenti: <p className="text-foreground/60">AM, B</p>
+                Patenti:{" "}
+                <p className="text-foreground/60">
+                  {profileData.patenti.join(", ")}
+                </p>
               </span>
 
               <span className="flex gap-1">
-                Disponibilità: <p className="text-foreground/60">Immediata</p>
+                Disponibilità:{" "}
+                <p className="text-foreground/60">
+                  {profileData.disponibilità}
+                </p>
               </span>
             </div>
           </section>

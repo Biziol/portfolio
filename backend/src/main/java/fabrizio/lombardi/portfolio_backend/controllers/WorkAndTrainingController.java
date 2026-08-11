@@ -63,22 +63,12 @@ public class WorkAndTrainingController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        try {
-            argumentService.deleteByWorkAndTrainingId(id);
-            service.deleteById(id);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Errore nella cancellazione: " + e.getMessage());
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.status(404).body("WorkAndTraining not found");
         }
 
-        /*
-         * try {
-         * service.deleteById(id);
-         * } catch (Exception e) {
-         * return
-         * ResponseEntity.status(500).body("Errore nella cancellazione dell'esperienza"
-         * );
-         * }
-         */
+        argumentService.deleteByWorkAndTrainingId(id);
+        service.deleteById(id);
 
         return ResponseEntity.ok("Cancellazione avvenuta con successo!");
     }
