@@ -155,7 +155,7 @@ function AppContent() {
 
   return (
     <div className="flex flex-col h-screen overflow-x-hidden">
-      {path !== "/admin" && path !== "/admin-page" && (
+      {path !== "admin" && path !== "admin-page" && (
         <TopBar className="justify-center 2xl:justify-between">
           <h2 className="hidden 2xl:block text-nowrap">Fabrizio Lombardi</h2>
           <div className="lg:flex flex-row gap-4 hidden">
@@ -204,8 +204,8 @@ function AppContent() {
       </div>
 
       <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin-page" element={<Admin />} />
+        <Route path="admin" element={<Admin />} />
+        <Route path="admin-page" element={<Admin />} />
       </Routes>
     </div>
   );

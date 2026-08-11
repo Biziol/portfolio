@@ -33,7 +33,7 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <Scaffold id="/crud-demo" className="justify-center items-center">
+      <Scaffold className="justify-center items-center">
         <Alert type="loading" message="Verifica sessione in corso..." />
       </Scaffold>
     );
