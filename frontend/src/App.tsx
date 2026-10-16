@@ -17,11 +17,16 @@ import Contact from "./pages/Contact";
 import { useEffect, useRef } from "react";
 import { cn } from "./utils/cn";
 import Admin from "./pages/admin/Admin";
+import AiWorkflows from "./pages/AiWorkflows";
 
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin-page" element={<Admin />} />
+        <Route path="*" element={<AppContent />} />
+      </Routes>
     </BrowserRouter>
   );
 }
@@ -33,13 +38,14 @@ function AppContent() {
 
   const isProgrammaticScroll = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastNavigatedPath = useRef(location.pathname);
+  const lastNavigatedPath = useRef<string | null>(null);
 
   const NAV_ITEMS = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
     { path: "/experience", label: "Esperienza" },
     { path: "/project", label: "Progetti" },
+    { path: "/ai-workflow", label: "Workflow IA" },
     { path: "/crud-demo", label: "CRUD Demo" },
     { path: "/rewiew", label: "Recensioni" },
     { path: "/contact", label: "Contatti" },
@@ -99,18 +105,27 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
+    // Observer-driven route changes must not scroll the reader back to the top.
+    if (lastNavigatedPath.current === path) return;
     const targetElement = document.getElementById(path);
-    if (targetElement) {
+    const container = containerRef.current;
+    if (targetElement && container) {
       isProgrammaticScroll.current = true;
       lastNavigatedPath.current = path;
 
+      const finishScroll = () => { isProgrammaticScroll.current = false; };
+      const alreadyAtTarget = Math.abs(targetElement.getBoundingClientRect().top - container.getBoundingClientRect().top) < 1;
+      container.addEventListener("scrollend", finishScroll, { once: true });
       targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (alreadyAtTarget) finishScroll();
 
-      const timer = globalThis.setTimeout(() => {
-        isProgrammaticScroll.current = false;
-      }, 300);
+      // Fallback for browsers without scrollend support.
+      const timer = globalThis.setTimeout(finishScroll, 2000);
 
-      return () => globalThis.clearTimeout(timer);
+      return () => {
+        globalThis.clearTimeout(timer);
+        container.removeEventListener("scrollend", finishScroll);
+      };
     }
   }, [path]);
 
@@ -118,12 +133,12 @@ function AppContent() {
     const container = containerRef.current;
     if (!container) return;
 
-    const sections = container.querySelectorAll("section");
+    const sections = container.querySelectorAll(":scope > section[id]");
 
     const observerOptions = {
       root: container,
       rootMargin: "-40% 0px -40% 0px",
-      threshold: 0.1,
+      threshold: 0,
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -156,9 +171,9 @@ function AppContent() {
   return (
     <div className="flex flex-col h-screen overflow-x-hidden">
       {path !== "/admin" && path !== "/admin-page" && (
-        <TopBar className="justify-center 2xl:justify-between">
+        <TopBar className="justify-center 2xl:justify-between lg:px-5 xl:px-10 2xl:px-16">
           <h2 className="hidden 2xl:block text-nowrap">Fabrizio Lombardi</h2>
-          <div className="lg:flex flex-row gap-4 hidden">
+          <div className="xl:flex flex-row gap-4 hidden">
             {NAV_ITEMS.map((item) => (
               <Button
                 key={item.label}
@@ -170,7 +185,7 @@ function AppContent() {
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 lg:hidden bg-muted-foreground/50 p-1 rounded-full w-80 mx-5 items-center justify-items-center">
+          <div className="grid grid-cols-3 gap-2 xl:hidden bg-muted-foreground/50 p-1 rounded-full w-80 mx-5 items-center justify-items-center">
             {mobileNavItems.map((item) => (
               <Button
                 className={cn(
@@ -198,15 +213,12 @@ function AppContent() {
         <About />
         <Experience />
         <Project />
+        <AiWorkflows />
         <CrudDemo />
         <Rewiew />
         <Contact />
       </div>
 
-      <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin-page" element={<Admin />} />
-      </Routes>
     </div>
   );
 }

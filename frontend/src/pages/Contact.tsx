@@ -1,8 +1,7 @@
-import { DownloadIcon } from "lucide-react";
 import Scaffold from "../components/Scaffold";
 import Card from "../components/ui/Card";
 import ContactInformation from "../components/ui/ContactInformation";
-import Button from "../components/ui/Button";
+import CvDownloadButton from "../components/cv/CvDownloadButton";
 import { profileData } from "../data/portfolioData";
 
 export default function Contact() {
@@ -33,10 +32,7 @@ export default function Contact() {
 
           <hr />
 
-          <Button className="w-full" href="/api/cv" newTab>
-            <DownloadIcon />
-            Scarica CV (PDF)
-          </Button>
+          <CvDownloadButton />
         </Card>
         <Card className="grow basis-0">
           <h2>Disponibilità</h2>
@@ -55,11 +51,11 @@ export default function Contact() {
             <div>
               <span className="flex gap-1">
                 Data di Nascita:{" "}
-                <p className="text-foreground/60">17/02/2005</p>
+                <p className="text-foreground/60">{profileData.birthDate}</p>
               </span>
 
               <span className="flex gap-1">
-                Nazionalità: <p className="text-foreground/60">Italiana</p>
+                Nazionalità: <p className="text-foreground/60">{profileData.nationality}</p>
               </span>
 
               <span className="flex gap-1">

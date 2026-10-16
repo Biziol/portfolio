@@ -10,15 +10,18 @@ import Login from "./components/Login";
 import Alert, { type AlertType } from "../../components/ui/Alert";
 import { logout } from "../../services/AuthService";
 import Experience from "./components/Experience";
+import AiWorkflowsAdmin from "./components/AiWorkflows";
 
 export default function Admin() {
-  const sections = ["About", "Esperienza"];
+  const sections = ["About", "Esperienza", "Workflow IA"];
   const [selectedSection, setSelectedSection] = useState<string>("About");
+  const [hasUnsavedWorkflow, setHasUnsavedWorkflow] = useState(false);
   const { isAuthenticated, loading, clearUser, user } = UseAuth();
   const [alertMessage, setAlertMessage] = useState<AlertType | null>(null);
   const handleCloseAlert = () => setAlertMessage(null);
 
   const handleLogout = () => {
+    if (hasUnsavedWorkflow && !window.confirm("Abbandonare le modifiche non salvate?")) return;
     setAlertMessage({ type: "loading", message: "Logout in corso..." });
     logout()
       .then(() => {
@@ -41,11 +44,11 @@ export default function Admin() {
 
   if (isAuthenticated && user?.role == "ADMIN") {
     return (
-      <Scaffold>
-        <TopBar>
-          <h1>Admin area</h1>
+      <Scaffold className="pt-44 sm:pt-30">
+        <TopBar className="flex-wrap gap-3 px-5 lg:px-10">
+          <h1 className="text-lg sm:text-2xl">Admin area</h1>
 
-          <div className="p-2 gap-2 flex flex-row rounded-full bg-muted-foreground/50">
+          <div className="order-3 w-full sm:order-none sm:w-auto p-2 gap-2 flex flex-row justify-center rounded-full bg-muted-foreground/50">
             {sections.map((s) => (
               <Button
                 key={s}
@@ -55,7 +58,12 @@ export default function Admin() {
                   s == selectedSection &&
                     "hover:bg-primary/10 hover:text-primary",
                 )}
-                onClick={() => setSelectedSection(s)}
+                onClick={() => {
+                  if (s === selectedSection) return;
+                  if (hasUnsavedWorkflow && !window.confirm("Abbandonare le modifiche non salvate?")) return;
+                  setHasUnsavedWorkflow(false);
+                  setSelectedSection(s);
+                }}
               >
                 {s}
               </Button>
@@ -69,6 +77,7 @@ export default function Admin() {
 
         {sections[0] == selectedSection && <Hero />}
         {sections[1] == selectedSection && <Experience />}
+        {sections[2] == selectedSection && <AiWorkflowsAdmin onDirtyChange={setHasUnsavedWorkflow} />}
         {alertMessage && (
           <Alert
             type={alertMessage.type}

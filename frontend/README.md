@@ -1,5 +1,8 @@
 # React + TypeScript + Vite
 
+La generazione del CV è descritta in [docs/cv.md](docs/cv.md).
+La sezione «Come uso l’IA» è descritta in [docs/ai-workflows.md](docs/ai-workflows.md).
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

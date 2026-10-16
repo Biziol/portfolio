@@ -123,3 +123,32 @@
     display: none;
   }
 }
+
+.workflow-markdown {
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+.workflow-markdown > * + * { margin-top: 0.75rem; }
+.workflow-markdown ul { list-style: disc; padding-left: 1.4rem; }
+.workflow-markdown ol { list-style: decimal; padding-left: 1.4rem; }
+.workflow-markdown li + li { margin-top: 0.25rem; }
+.workflow-markdown pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--muted-foreground);
+}
+.workflow-markdown code { font-size: 0.875em; }
+.workflow-markdown :not(pre) > code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  background: var(--muted-foreground);
+}
+.workflow-markdown blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+}
+.workflow-markdown table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.workflow-markdown th, .workflow-markdown td { border: 1px solid var(--border); padding: 0.5rem; }
+.workflow-markdown hr { margin: 1rem 0; }
