@@ -78,11 +78,11 @@ export default function About() {
   return (
     <Scaffold>
       <h1>Skills</h1>
-      <section className="w-full flex flex-row gap-5">
+      <section className="w-full flex flex-row flex-wrap gap-5">
         {SKILL_FIELDS.map((f) => {
           const Icon = SKILL_FIELD_ICONS[f];
           return (
-            <Card key={f} className="basis-0 grow">
+            <Card key={f} className="basis-0 grow min-w-60">
               <div className="flex gap-2 items-center">
                 <Icon className="w-6 h-6 text-primary" />
                 <h4>{f}</h4>

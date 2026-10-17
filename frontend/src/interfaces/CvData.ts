@@ -1,4 +1,5 @@
 import type { profile } from "../data/profile";
+import type { CvSignature } from "../services/cvSignatureService";
 
 export interface CvEntry {
   id: number;
@@ -16,4 +17,5 @@ export interface CvData {
   skills: { field: string; names: string[] }[];
   work: CvEntry[];
   training: CvEntry[];
+  signature?: CvSignature | null;
 }

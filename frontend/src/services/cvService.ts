@@ -4,6 +4,7 @@ import createCvDocument from "../components/cv/CvDocument";
 import { createCvData } from "../utils/createCvData";
 import { getAllSkills } from "./skillService";
 import { getWorkAndTrainings } from "./workAndTrainingService";
+import { getCvSignature } from "./cvSignatureService";
 
 async function preparePhoto(src: string) {
   const image = new Image();
@@ -24,8 +25,9 @@ export async function downloadCv() {
   if (!("Buffer" in globalThis)) {
     Object.defineProperty(globalThis, "Buffer", { value: Buffer, configurable: true, writable: true });
   }
-  const [skills, entries] = await Promise.all([getAllSkills(), getWorkAndTrainings()]);
+  const [skills, entries, signature] = await Promise.all([getAllSkills(), getWorkAndTrainings(), getCvSignature()]);
   const data = createCvData(skills, entries);
+  data.signature = signature;
   const { hostname, origin } = window.location;
   const isLocal = import.meta.env.DEV || hostname === "localhost" ||
     hostname.endsWith(".localhost") || hostname.startsWith("127.") || hostname === "[::1]";

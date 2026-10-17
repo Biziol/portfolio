@@ -4,6 +4,7 @@ import Card from "../components/ui/Card";
 import { useEffect, useState } from "react";
 import type { Skill } from "../interfaces/Skill";
 import { getAllSkills } from "../services/skillService";
+import { aboutSections } from "../data/about";
 import {
   SKILL_FIELD_ICONS,
   SKILL_FIELDS,
@@ -30,33 +31,25 @@ export default function About() {
       <div className="flex flex-wrap flex-row gap-5">
         <Card className="basis-0 grow min-w-50">
           <Code2Icon className="w-10 h-10 text-primary" />
-          <h3>Il Mio Percorso</h3>
+          <h3>{aboutSections[0].title}</h3>
           <p className="text-foreground/50 text-wrap">
-            Nato il 17 febbraio 2005 a Roma, la mia passione per la tecnologia
-            mi ha portato a specializzarmi nello sviluppo Fullstack.
+            {aboutSections[0].paragraphs[0]}
             <br /> <br />
-            Attualmente frequento l'ITS Lazio Digital e ho completato un
-            tirocinio presso SMC Treviso S.r.l, dove ho sviluppato una Web App
-            completa integrando Spring Boot e React.
+            {aboutSections[0].paragraphs[1]}
             <br /> <br />
-            Il mio approccio è basato sul learning by doing: imparo progettando
-            e implementando soluzioni reali.
+            {aboutSections[0].paragraphs[2]}
           </p>
         </Card>
 
         <Card className="basis-0 grow min-w-50">
           <SmartphoneIcon className="w-10 h-10 text-primary" />
-          <h3>Filosofia di Lavoro</h3>
+          <h3>{aboutSections[1].title}</h3>
           <p className="text-foreground/50 text-wrap">
-            Credo nell'iniziativa personale come motore di crescita. Ogni
-            progetto è un'opportunità per sperimentare nuove tecnologie e
-            migliorare le mie competenze.
+            {aboutSections[1].paragraphs[0]}
             <br /> <br />
-            Utilizzo Linux quotidianamente, ottimizzando costantemente il mio
-            ambiente di sviluppo per massimizzare la produttività.
+            {aboutSections[1].paragraphs[1]}
             <br /> <br />
-            La mia dedizione a un approccio tecnico e completo mi permette di
-            affrontare sfide sempre più complesse con successo.
+            {aboutSections[1].paragraphs[2]}
           </p>
         </Card>
       </div>
