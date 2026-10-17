@@ -27,13 +27,24 @@ function isApplicationType(
 
 export default function Project() {
   const [repos, setRepos] = useState<GitHubRepository[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    getPublicRepositories("Biziol").then((data) => setRepos(data));
+    let cancelled = false;
+    getPublicRepositories()
+      .then((data) => { if (!cancelled) setRepos(data); })
+      .catch(() => { if (!cancelled) setError(true); });
+    return () => { cancelled = true; };
   }, []);
   return (
     <Scaffold id="/project">
       <h1>Progetti</h1>
+      {error && (
+        <p role="status" className="text-foreground/60">
+          I progetti non sono al momento disponibili. Riprova tra poco oppure visita{" "}
+          <a href="https://github.com/Biziol" target="_blank" rel="noopener noreferrer" className="underline">il mio profilo GitHub</a>.
+        </p>
+      )}
       <div className="w-full flex flex-row flex-wrap gap-5">
         {repos.map((repo) => (
           <Card

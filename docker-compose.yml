@@ -22,6 +22,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: changeme_root_password
       APP_CORS_ALLOWED_ORIGIN: "http://localhost:3002,http://127.0.0.1:3002"
       SPRING_PROFILES_ACTIVE: docker
+      GITHUB_USERNAME: ${GITHUB_USERNAME:-Biziol}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       SPRING_EMAIL_HOST: smtp.gmail.com
       SPRING_EMAIL_PORT: 587
       SPRING_EMAIL_USERNAME: tuoindirizzo@example.com
