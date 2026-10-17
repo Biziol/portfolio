@@ -124,7 +124,7 @@ export function useSectionNavigation(
     const onScroll = () => {
       scheduleSelection();
       clearTimeout(idleTimer);
-      idleTimer = setTimeout(settle, 1);
+      idleTimer = setTimeout(settle, 50);
     };
     const interrupt = () => {
       userScrolling = true;
