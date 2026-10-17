@@ -152,3 +152,153 @@
 .workflow-markdown table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
 .workflow-markdown th, .workflow-markdown td { border: 1px solid var(--border); padding: 0.5rem; }
 .workflow-markdown hr { margin: 1rem 0; }
+
+@keyframes site-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.public-site .site-header {
+  background-color: var(--background);
+  backdrop-filter: none;
+}
+
+.public-site .site-header button {
+  position: relative;
+}
+
+.public-site .site-header button::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+.public-site .site-header button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.public-site .site-header button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .public-site .site-header {
+    animation: site-fade-in 350ms ease-out backwards;
+  }
+  .public-site .hero-intro > :not(.hero-scroll) {
+    animation: site-fade-in 700ms ease-out backwards;
+  }
+  .public-site .hero-intro > :nth-child(2) { animation-delay: 40ms; }
+  .public-site .hero-intro > :nth-child(3) { animation-delay: 80ms; }
+  .public-site .hero-intro > :nth-child(4) { animation-delay: 120ms; }
+  .public-site .hero-intro > :nth-child(5) { animation-delay: 160ms; }
+
+  .public-site button, .public-site a {
+    transition: color 180ms ease, background-color 180ms ease;
+  }
+  .public-site [data-motion-card] {
+    transition: border-color 200ms ease;
+  }
+  .public-site .site-header button {
+    /* Selection changes immediately; only interaction feedback animates. */
+    transition: color 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .public-site .site-header button::after {
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .public-site .site-header button:not(:disabled):active {
+    transform: scale(0.98);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .public-site [data-motion-card]:hover {
+    border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+  }
+  .public-site .site-header button:not(:disabled):hover {
+    transform: scale(1.035);
+  }
+  .public-site .site-header button:not(:disabled):hover::after {
+    transform: scaleX(1);
+  }
+  .public-site .site-header button:not(:disabled):hover:active {
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-site .scroll-wheel { animation: none !important; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .public-site [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .public-site [data-reveal="visible"] {
+    opacity: 1;
+    transform: none;
+    transition: opacity 600ms ease-out, transform 600ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease;
+  }
+  .public-site [data-reveal]:focus-within {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.mobile-dial {
+  width: 20rem;
+  max-width: calc(100vw - 2.5rem);
+  margin-inline: 1.25rem;
+  padding: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+.mobile-dial:active { cursor: grabbing; }
+.mobile-dial-window { position: relative; height: 36px; overflow: hidden; border-radius: 999px; }
+.mobile-dial-selection {
+  position: absolute;
+  inset-block: 0;
+  left: calc(100% / 3);
+  width: calc(100% / 3);
+  border-radius: 999px;
+  background: var(--primary);
+  pointer-events: none;
+}
+.mobile-dial-track {
+  display: flex;
+  height: 100%;
+  width: calc(100% * 5 / 3);
+  transform: translate3d(-20%, 0, 0);
+}
+.public-site .site-header .mobile-dial button {
+  flex: 0 0 20%;
+  min-width: 0;
+  padding: 4px;
+  border-radius: 999px;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: inherit;
+  transform: none;
+}
+.public-site .site-header .mobile-dial button:focus-visible { outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dial-track, .public-site .site-header .mobile-dial button { transition: none !important; }
+}

@@ -5,11 +5,11 @@ import ContactInformation from "../components/ui/ContactInformation";
 
 export default function Home() {
   return (
-    <Scaffold id="/" className="justify-center gap-5">
+    <Scaffold id="/" className="hero-intro justify-center gap-5">
       <img
         src={profileData.photo}
         alt="foto cv"
-        className="w-32 h-32 rounded-full object-cover block border-primary border-4 shadow-[0_0_40px_var(--color-primary)]"
+        className="hero-portrait w-32 h-32 rounded-full object-cover block border-primary border-4 shadow-[0_0_40px_var(--color-primary)]"
       />
       <h2>
         Ciao, sono <span className="text-primary">{profileData.name}</span>
@@ -33,7 +33,7 @@ export default function Home() {
           ))}
       </div>
 
-      <MouseAnimation className="w-10 h-10 absolute bottom-5 text-primary" />
+      <MouseAnimation className="hero-scroll w-10 h-10 absolute bottom-5 text-primary" />
     </Scaffold>
   );
 }

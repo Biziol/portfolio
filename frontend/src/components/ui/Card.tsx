@@ -23,6 +23,7 @@ export default function Card({
     return (
       <button
         {...props}
+        data-motion-card
         type="button"
         className={baseClassName}
         onClick={onClick}
@@ -33,7 +34,7 @@ export default function Card({
   }
 
   return (
-    <div {...props} className={baseClassName}>
+    <div {...props} data-motion-card className={baseClassName}>
       {children}
     </div>
   );
