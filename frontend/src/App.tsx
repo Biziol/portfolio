@@ -58,7 +58,7 @@ function AppContent() {
 
   return (
     <div className="public-site flex flex-col h-screen overflow-x-hidden">
-      {path !== "/admin" && path !== "/admin-page" && (
+      {path !== "admin" && path !== "admin-page" && (
         <TopBar className="site-header justify-center 2xl:justify-between lg:px-5 xl:px-10 2xl:px-16">
           <h2 className="hidden 2xl:block text-nowrap">Fabrizio Lombardi</h2>
           <div className="xl:flex flex-row gap-4 hidden">
