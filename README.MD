@@ -95,6 +95,28 @@ Il backend include la documentazione OpenAPI tramite SpringDoc e rende disponibi
 - In deploy con Docker Compose (backend su `8081`): `http://localhost:8081/swagger-ui.html`
 - Endpoint OpenAPI JSON: `/v3/api-docs`
 
+Contenuti del portfolio in JSON
+
+`GET /api/portfolio` è pubblico e raccoglie i contenuti dinamici in un'unica
+risposta `application/json`, riutilizzando gli stessi servizi delle API di sezione:
+
+- `workAndTraining`: esperienze e formazione, con i rispettivi `arguments`.
+- `skills`: competenze e categorie.
+- `aiWorkflows`: solo workflow IA pubblicati, con strumenti, passaggi, esempio e conclusioni.
+- `projects`: progetti dallo snapshot condiviso GitHub, senza chiamate esterne durante la richiesta.
+- `projectsAvailable`: `false` prima del primo aggiornamento GitHub riuscito; in quel caso
+  `projects` è `[]` e gli altri contenuti rimangono disponibili con HTTP 200.
+- `reviews` e `rating`: recensioni pubbliche e media (0 in assenza di recensioni).
+
+Le collezioni senza contenuti sono array vuoti. I DTO delle sezioni mantengono
+gli stessi campi delle API esistenti. Le bozze dei workflow e i dati amministrativi
+non sono inclusi. Profilo, contatti e testi About definiti staticamente nel frontend
+(`frontend/src/data/profile.ts` e `about.ts`) non fanno parte di questo endpoint.
+
+```bash
+curl -H 'Accept: application/json' http://localhost:8080/api/portfolio
+```
+
 Variabili di ambiente
 
 - `frontend/.env` o `frontend/.env.example` contiene variabili per la build (es. URL backend).
